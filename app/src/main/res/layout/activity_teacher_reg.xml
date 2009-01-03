@@ -43,5 +43,6 @@
             android:text="@string/reg_as_teacher"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             android:textSize="24sp" />
+
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>
