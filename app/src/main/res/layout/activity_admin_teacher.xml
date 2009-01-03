@@ -4,9 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.cassie_app.CreateClassActivity">
+    tools:context="com.example.cassie_app.AdminTeacherActivity">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
@@ -16,51 +17,36 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:title="Create Class"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:title="Unconfirmed Teachers" />
 
     </android.support.design.widget.AppBarLayout>
 
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/list_new_pupils"
+        android:id="@+id/list_unconfirmed"
         android:background="#aaaaaa"
+        android:choiceMode="multipleChoice"
         android:layout_marginTop="?attr/actionBarSize"/>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_add"
+        android:id="@+id/fab_all"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_anchor="@id/transparent_view"
-        app:layout_anchorGravity="top"
-        android:layout_gravity="top|end"
-        android:layout_marginBottom="30dp"
+        android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@drawable/ic_person_add_black_24dp" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/my_recycler_view"
-        android:scrollbars="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
-    <View
-        android:layout_width="8dp"
-        app:layout_anchor="@id/fab_done"
-        app:layout_anchorGravity="top"
-        app:useCompatPadding="false"
-        android:layout_gravity="end"
-        android:background="@android:color/transparent"
-        android:id="@+id/transparent_view"
-        android:layout_height="8dp"/>
+        app:srcCompat="@drawable/ic_select_all_black_24dp" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_done"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
+        android:layout_gravity="top|end"
+        android:layout_marginBottom="30dp"
+        android:tooltipText="Confirm Selected"
+        app:layout_anchor="@id/fab_all"
+        app:layout_anchorGravity="top"
         app:srcCompat="@drawable/ic_done_all_black_24dp" />
 
 </android.support.design.widget.CoordinatorLayout>
