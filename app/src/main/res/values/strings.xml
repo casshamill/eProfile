@@ -47,6 +47,7 @@
     <string name="uploadtext">Upload Text Post</string>
     <string name="from_file">From File</string>
     <string name="text">Upload Text</string>
+    <string name="error_content_required">You must enter content for post</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 
@@ -218,4 +219,11 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_create_class">createClassActivity</string>
+    <string name="title_activity_upload_text">UploadText</string>
+    <string name="title_activity_pupil_list">PupilListActivity</string>
+    <string name="title_activity_upload_photo">UploadPhoto</string>
+    <string name="title_activity_wait_for_confirmed">WaitForConfirmedActivity</string>
+    <string name="title_activity_admin_teacher">AdminTeacherActivity</string>
+    <string name="title_activity_add_pupil_popup">New Pupil</string>
+    <string name="menu_search">Search Content or Teacher</string>
 </resources>
