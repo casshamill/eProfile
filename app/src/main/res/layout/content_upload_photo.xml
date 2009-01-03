@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.cassie_app.UploadPhoto"
+    tools:showIn="@layout/activity_upload_photo"
+    android:id="@+id/content_include">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/pupil_names"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="43dp"
+            android:layout_marginStart="43dp"
+            android:layout_marginTop="31dp"
+            android:text="Pupils Names Here" />
+
+        <ImageView
+            android:id="@+id/photo_show"
+            android:layout_width="240dp"
+            android:layout_height="355dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            app:srcCompat="@mipmap/ic_launcher_round"
+            tools:layout_editor_absoluteX="72dp"
+            tools:layout_editor_absoluteY="78dp"
+            android:layout_marginTop="15dp"
+            />
+
+        <EditText
+            android:id="@+id/photo_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/pupil_names"
+            android:layout_alignStart="@+id/pupil_names"
+            android:layout_below="@+id/pupil_names"
+            android:layout_marginTop="15dp"
+            android:ems="10"
+            android:inputType="textMultiLine" />
+    </RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>
