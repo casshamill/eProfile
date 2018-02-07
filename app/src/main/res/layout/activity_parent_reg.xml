@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.cassie_app.ParentRegActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/reg_submit3"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/class_name"
+            android:layout_marginTop="77dp"
+            android:background="@color/colorAccent"
+            android:text="@string/action_reg"
+            android:textColor="@color/colorPrimaryDark" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="17dp"
+            android:text="@string/reg_as_parent"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:textSize="24sp" />
+
+        <EditText
+            android:id="@+id/child_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/child_dob"
+            android:layout_alignStart="@+id/child_dob"
+            android:layout_below="@+id/textView3"
+            android:layout_marginTop="34dp"
+            android:ems="10"
+            android:hint="@string/reg_child_name"
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/child_dob"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/child_name"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="13dp"
+            android:ems="10"
+            android:hint="@string/reg_child_dob"
+            android:inputType="date" />
+
+        <EditText
+            android:id="@+id/class_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/child_dob"
+            android:layout_alignStart="@+id/child_dob"
+            android:layout_below="@+id/child_dob"
+            android:layout_marginTop="17dp"
+            android:ems="10"
+            android:hint="@string/reg_class_name"
+            android:inputType="textPersonName" />
+    </RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>
