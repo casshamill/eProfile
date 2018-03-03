@@ -30,9 +30,22 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -63,6 +76,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private DatabaseReference mDatabase;
+    private FirebaseAuth mAuth;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +118,37 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        //test db connection
+        //mDatabase = FirebaseDatabase.getInstance().getReference();
+        //mDatabase.addValueEventListener(postListener);
+        mAuth = FirebaseAuth.getInstance();
     }
+
+    private ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //for (DataSnapshot messageSnapshot : dataSnapshot.getChildren()) {
+                    DataSnapshot messageSnapshot = dataSnapshot.child("pupils");
+                    //System.out.println("Tiarnan");
+                    DataSnapshot feeds = messageSnapshot.child("0").child("feed");
+                    for (DataSnapshot d : feeds.getChildren()){
+                        System.out.println("Post : " + d.child("content").getValue());
+                    }
+                    //String name = (String) messageSnapshot.child("name").getValue();
+                    //String message = (String) messageSnapshot.child("message").getValue();
+                //}
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                System.out.println("Cancelled Read from Firebase");
+                // ...
+            }
+        };
+
+
 
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {
@@ -200,8 +246,39 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
+            //mAuthTask = new UserLoginTask(email, password);
+            //mAuthTask.execute((Void) null);
+            mAuth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
+                                //Log.d(TAG, "signInWithEmail:success");
+                                //FirebaseUser user = mAuth.getCurrentUser();
+                                System.out.println("Login Successful");
+                                Intent i = new Intent(LoginActivity.this,MainTeacherActivity.class);
+                                LoginActivity.this.startActivity(i);
+                                finish();
+                                //updateUI(user);
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                //Log.w(TAG, "signInWithEmail:failure", task.getException());
+                                //Toast.makeText(EmailPasswordActivity.this, "Authentication failed.",
+                                //      Toast.LENGTH_SHORT).show();
+                                //updateUI(null);
+                                System.out.println("Login Failed");
+                                showProgress(false);
+                                //finish();
+                                //startActivity(getIntent());
+                                //find way to cancel show progress
+                                mPasswordView.setError(getString(R.string.error_incorrect_password));
+                                mPasswordView.requestFocus();
+                            }
+
+                            // ...
+                        }
+                    });
         }
         //probably display next activity here
     }
@@ -327,8 +404,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // 2 = succ parent log in
         @Override
         protected Integer doInBackground(Void... params) {
+            final int[] return_val = {0};
             // TODO: attempt authentication against a network service.
 
+
+            /*
             try {
                 // Simulate network access.
                 Thread.sleep(2000);
@@ -341,6 +421,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             if (!mEmail.toLowerCase().equals("teacher@teacher") && !mEmail.toLowerCase().equals("parent@parent"))
                 return -1;
             else return -2;
+        */
+            return return_val[0];
         }
 
         @Override

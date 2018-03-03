@@ -23,6 +23,7 @@ public class RegActivity extends AppCompatActivity {
     private RadioGroup radioGroupView;
     private View mRegFormView;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

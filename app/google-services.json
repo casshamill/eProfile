@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "808975254048",
+    "firebase_url": "https://cassie-app-b558a.firebaseio.com",
+    "project_id": "cassie-app-b558a",
+    "storage_bucket": "cassie-app-b558a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:808975254048:android:e3135557f903ef59",
+        "android_client_info": {
+          "package_name": "com.example.cassie_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "808975254048-dt0ql2h7hgrccc6tbcn8kluujjiag2h8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAx1x8OvsoUzvYR6IG3WmpheWwOOhmJwtA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

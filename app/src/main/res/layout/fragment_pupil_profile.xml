@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.cassie_app.MainParentActivity"
+    tools:showIn="@layout/activity_main_parent">
+
+    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view"
+        android:layout_width="350dp"
+        android:layout_height="272dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"
+        card_view:cardBackgroundColor="@color/feed_bg"
+        card_view:cardCornerRadius="8dp"
+        card_view:cardPreventCornerOverlap="true"
+        card_view:contentPaddingBottom="@dimen/feed_item_padding_top_bottom"
+        card_view:contentPaddingLeft="@dimen/feed_item_padding_left_right"
+        card_view:contentPaddingRight="@dimen/feed_item_padding_left_right"
+        card_view:contentPaddingTop="@dimen/feed_item_padding_top_bottom"
+
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp">
+
+                <TextView
+                    android:id="@+id/description"
+                    android:layout_width="183dp"
+                    android:layout_height="match_parent"
+                    android:text="@string/title_description" />
+
+                <TextView
+                    android:id="@+id/date"
+                    android:layout_width="114dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/title_date" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@android:color/darker_gray" />
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="168dp"
+                    android:orientation="vertical"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="20dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="@string/large_text" />
+                </LinearLayout>
+            </ScrollView>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+</LinearLayout>

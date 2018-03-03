@@ -35,7 +35,7 @@
             android:label="@string/title_activity_reg"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ParentRegActivity" />
-        <activity android:name=".TeacherRegActivity"></activity>
+        <activity android:name=".TeacherRegActivity" />
     </application>
 
 </manifest>
