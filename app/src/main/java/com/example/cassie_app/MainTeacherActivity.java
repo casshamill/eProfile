@@ -9,9 +9,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
-public class MainTeacherActivity extends AppCompatActivity {
+public class MainTeacherActivity extends AppCompatActivity{
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -20,7 +22,7 @@ public class MainTeacherActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_profiles:
-                   setTitle("Profiles");
+                    setTitle("Profiles");
                     TeacherProfilesFragment fragment1 = new TeacherProfilesFragment();
                     FragmentTransaction fragmentTransaction1 = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction1.replace(R.id.teacherContainer, fragment1, "FragmentName");
@@ -61,4 +63,5 @@ public class MainTeacherActivity extends AppCompatActivity {
         fragmentTransaction2.commit();
     }
 
+    public void onFragmentInteraction(){}
 }
