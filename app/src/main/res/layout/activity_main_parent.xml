@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:id="@+id/main_parent"
     tools:context="com.example.cassie_app.MainParentActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -15,7 +16,7 @@
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/pupil_avatar"
             android:layout_width="match_parent"
             android:layout_height="64dp"
             android:layout_weight="1"
@@ -23,7 +24,7 @@
             app:srcCompat="@drawable/ic_face_black_24dp" />
 
         <TextView
-            android:id="@+id/textView5"
+            android:id="@+id/pupil_name"
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:layout_weight="1"
@@ -35,10 +36,13 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include
-        layout="@layout/content_main_parent"
-        android:layout_height="487dp"
-        tools:layout_editor_absoluteY="80dp" />
+    <android.support.v7.widget.RecyclerView
+        android:layout_marginTop="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/rv" />
+
+
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
