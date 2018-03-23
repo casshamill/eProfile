@@ -6,6 +6,7 @@ public class Teacher {
     private String class_id;
     private String school_id;
     private boolean confirmed;
+    private final boolean admin = false;  // will be changed for one person per school by e-profile staff.
 
     public Teacher(String email, String name, String school_id){
         this.email = email;
@@ -53,6 +54,10 @@ public class Teacher {
 
     public void setSchool_id(String school_id) {
         this.school_id = school_id;
+    }
+
+    public boolean getAdmin (){
+        return this.admin;
     }
 
 }
