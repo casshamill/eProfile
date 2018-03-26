@@ -44,6 +44,7 @@
     <string name="confirm_changes">Confirm Changes</string>
     <string name="delete_class">Delete Class</string>
     <string name="camera">Camera</string>
+    <string name="uploadtext">Upload Text Post</string>
     <string name="from_file">From File</string>
     <string name="text">Upload Text</string>
     <string name="large_text">
@@ -216,4 +217,5 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_create_class">createClassActivity</string>
 </resources>
