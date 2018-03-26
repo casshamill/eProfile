@@ -61,7 +61,7 @@ public class RegActivity extends AppCompatActivity {
 
     private void AttemptRegistration(){
         //validate
-        String schoolId =schoolIdView.getText().toString();
+        final String schoolId =schoolIdView.getText().toString();
         final String name = nameView.getText().toString();
         final String email = emailView.getText().toString();
         String pw = pwordView.getText().toString();
@@ -87,7 +87,7 @@ public class RegActivity extends AppCompatActivity {
             return;
         }
 
-        mAuth.createUserWithEmailAndPassword(email, pw)
+       mAuth.createUserWithEmailAndPassword(email, pw)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -105,6 +105,7 @@ public class RegActivity extends AppCompatActivity {
                                 Intent i = new Intent(RegActivity.this, TeacherRegActivity.class);
                                 i.putExtra("EMAILVALUE",email);
                                 i.putExtra("NAMEVALUE",name);
+                                i.putExtra("SCHOOLVALUE",schoolId);
                                 RegActivity.this.startActivity(i);
                             }
                         } else {
