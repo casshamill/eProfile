@@ -7,6 +7,16 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,9 +26,17 @@ public class ParentRegActivity extends AppCompatActivity {
     private EditText childDobView;
     private EditText classNameView;
 
+    private String uid;
+    private String email;
+    private String name;
+    private String pupil_id;
+    private boolean pupil_found;
+
     private Pattern pattern;
     private Matcher matcher;
 
+    private DatabaseReference mDatabase;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,11 +55,13 @@ public class ParentRegActivity extends AppCompatActivity {
             }
         });
 
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mAuth = FirebaseAuth.getInstance();
     }
 
     private void AttemptParentRegistration() {
         //validate
-        String childName = childNameView.getText().toString();
+        final String childName = childNameView.getText().toString();
         String childDob = childDobView.getText().toString();
         String className = classNameView.getText().toString();
 
@@ -65,12 +85,42 @@ public class ParentRegActivity extends AppCompatActivity {
             childDobView.requestFocus();
             return; }*/
 
-        else {
-            Intent i = new Intent(ParentRegActivity.this, MainParentActivity.class);
-            ParentRegActivity.this.startActivity(i);
-        }
+        pupil_found = false;
+        //find child uid
+        DatabaseReference childRef = mDatabase.child("pupils");
+        childRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                System.out.println("Finding child");
+                for (DataSnapshot d : dataSnapshot.getChildren()){
+                    String currname = (String) d.child("name").getValue();
+                    if (currname.equals(childName)){
+                        pupil_id = d.getKey();
+                        pupil_found = true;
+                        register();
+                        break;
+                    }
+                }
+                if (pupil_found == false){
+                    System.out.println("Pupil " + childName + "not found, Registreation unsucessful");
+                }
+            }
 
-        //async task to register
-        //TODO set up mysql db for this.
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void register(){
+        //add parent to db
+        email = getIntent().getStringExtra("EMAILVALUE");
+        name = getIntent().getStringExtra("NAMEVALUE");
+        Parent p = new Parent(email, name, pupil_id);
+        DatabaseReference newRef = mDatabase.child("parents").getRef();
+        newRef.child(mAuth.getCurrentUser().getUid()).setValue(p);
+        Intent i = new Intent(ParentRegActivity.this, MainParentActivity.class);
+        ParentRegActivity.this.startActivity(i);
     }
 }
