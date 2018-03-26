@@ -1,10 +1,10 @@
 package com.example.cassie_app;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +12,7 @@ import android.widget.Button;
 
 
 public class TeacherUploadFragment extends Fragment {
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
@@ -34,15 +35,24 @@ public class TeacherUploadFragment extends Fragment {
     }
 
     public void openCamera(){
-        Intent i = new Intent("android.media.action.IMAGE_CAPTURE");
-        startActivity(i);
+        Intent i = new Intent(getActivity(), PupilListActivity.class);
+        i.putExtra("parent", "camera");
+        TeacherUploadFragment.this.startActivity(i);
     }
 
+
+
     public void uploadText(){
-        UploadTextFragment f = new UploadTextFragment();
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.teacherContainer, f, "FragmentName");
-        fragmentTransaction.commit();
+        System.out.println("Upload clicked");
+        //Intent i = new Intent(getActivity(), UploadText.class);
+        Intent i = new Intent(getActivity(), PupilListActivity.class);
+        i.putExtra("parent", "text");
+        TeacherUploadFragment.this.startActivity(i);
+    }
+
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        public void onFragmentInteraction(Uri uri);
     }
 
 }
