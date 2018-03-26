@@ -4,7 +4,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.cassie_app.MainParentActivity"
@@ -24,7 +24,6 @@
         card_view:contentPaddingLeft="@dimen/feed_item_padding_left_right"
         card_view:contentPaddingRight="@dimen/feed_item_padding_left_right"
         card_view:contentPaddingTop="@dimen/feed_item_padding_top_bottom"
-
         >
 
         <LinearLayout
@@ -73,6 +72,7 @@
                     android:paddingTop="20dp">
 
                     <TextView
+                        android:id="@+id/feed_content"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:text="@string/large_text" />
