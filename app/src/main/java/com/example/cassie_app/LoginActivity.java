@@ -76,9 +76,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
-    private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
-
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,35 +117,32 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
-
-        //test db connection
-        //mDatabase = FirebaseDatabase.getInstance().getReference();
-        //mDatabase.addValueEventListener(postListener);
+        mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
     }
 
     private ValueEventListener postListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                //for (DataSnapshot messageSnapshot : dataSnapshot.getChildren()) {
-                    DataSnapshot messageSnapshot = dataSnapshot.child("pupils");
-                    //System.out.println("Tiarnan");
-                    DataSnapshot feeds = messageSnapshot.child("0").child("feed");
-                    for (DataSnapshot d : feeds.getChildren()){
-                        System.out.println("Post : " + d.child("content").getValue());
-                    }
-                    //String name = (String) messageSnapshot.child("name").getValue();
-                    //String message = (String) messageSnapshot.child("message").getValue();
-                //}
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            //for (DataSnapshot messageSnapshot : dataSnapshot.getChildren()) {
+            DataSnapshot messageSnapshot = dataSnapshot.child("pupils");
+            //System.out.println("Tiarnan");
+            DataSnapshot feeds = messageSnapshot.child("0").child("feed");
+            for (DataSnapshot d : feeds.getChildren()){
+                System.out.println("Post : " + d.child("content").getValue());
             }
+            //String name = (String) messageSnapshot.child("name").getValue();
+            //String message = (String) messageSnapshot.child("message").getValue();
+            //}
+        }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                System.out.println("Cancelled Read from Firebase");
-                // ...
-            }
-        };
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+            // Getting Post failed, log a message
+            System.out.println("Cancelled Read from Firebase");
+            // ...
+        }
+    };
 
 
 
@@ -257,10 +253,41 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                                 //Log.d(TAG, "signInWithEmail:success");
                                 //FirebaseUser user = mAuth.getCurrentUser();
                                 System.out.println("Login Successful");
-                                Intent i = new Intent(LoginActivity.this,MainTeacherActivity.class);
-                                LoginActivity.this.startActivity(i);
-                                finish();
-                                //updateUI(user);
+                                final String uid = mAuth.getCurrentUser().getUid();
+                                System.out.println("logged in user is " + uid);
+                                //check if teacher or parent
+                                DatabaseReference teachers = mDatabase.child("teachers");
+                                teachers.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        Intent i = null;
+                                        if (dataSnapshot.hasChild(uid)){
+                                            System.out.println("Teaecher exists");
+                                            //check if teacher confirmed yet
+                                            if ((boolean)dataSnapshot.child(uid).child("confirmed").getValue() == false){
+                                                System.out.println("Teaecher exists unconfirmed");
+                                                //show wait to be confirmed activity
+                                            } else if((String)dataSnapshot.child(uid).child("class_id").getValue() == "-1"){
+                                                //show add class screen
+                                                System.out.println("Teaecher exists no class");
+                                                i = new Intent(LoginActivity.this,createClassActivity.class);
+                                            } else {
+                                                System.out.println("Teaecher exists class registered");
+                                                i = new Intent(LoginActivity.this,MainTeacherActivity.class);
+                                            }
+                                        } else {
+                                            System.out.println("Teaecher not exists");
+                                            i = new Intent(LoginActivity.this,MainParentActivity.class);
+                                        }
+                                        LoginActivity.this.startActivity(i);
+                                        finish();
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
                             } else {
                                 // If sign in fails, display a message to the user.
                                 //Log.w(TAG, "signInWithEmail:failure", task.getException());
