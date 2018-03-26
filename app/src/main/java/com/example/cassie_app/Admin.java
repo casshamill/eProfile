@@ -1,5 +1,9 @@
 package com.example.cassie_app;
 
+/**
+ * Created by Tiarnan on 13/03/2018.
+ */
+
 public class Admin {
     private String school_id;
     private String email;
