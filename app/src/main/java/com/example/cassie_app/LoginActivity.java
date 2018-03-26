@@ -3,24 +3,21 @@ package com.example.cassie_app;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
-
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
-
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,13 +27,11 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -45,19 +40,21 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executor;
 
+import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.READ_CONTACTS;
 
 /**
  * A login screen that offers login via email/password.
  */
+@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
     /**
      * Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
+    private static final int REQUEST_CAMERA = 1;
 
     /**
      * A dummy authentication store containing known user names and passwords.
@@ -122,27 +119,27 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     private ValueEventListener postListener = new ValueEventListener() {
-        @Override
-        public void onDataChange(DataSnapshot dataSnapshot) {
-            //for (DataSnapshot messageSnapshot : dataSnapshot.getChildren()) {
-            DataSnapshot messageSnapshot = dataSnapshot.child("pupils");
-            //System.out.println("Tiarnan");
-            DataSnapshot feeds = messageSnapshot.child("0").child("feed");
-            for (DataSnapshot d : feeds.getChildren()){
-                System.out.println("Post : " + d.child("content").getValue());
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //for (DataSnapshot messageSnapshot : dataSnapshot.getChildren()) {
+                    DataSnapshot messageSnapshot = dataSnapshot.child("pupils");
+                    //System.out.println("Tiarnan");
+                    DataSnapshot feeds = messageSnapshot.child("0").child("feed");
+                    for (DataSnapshot d : feeds.getChildren()){
+                        System.out.println("Post : " + d.child("content").getValue());
+                    }
+                    //String name = (String) messageSnapshot.child("name").getValue();
+                    //String message = (String) messageSnapshot.child("message").getValue();
+                //}
             }
-            //String name = (String) messageSnapshot.child("name").getValue();
-            //String message = (String) messageSnapshot.child("message").getValue();
-            //}
-        }
 
-        @Override
-        public void onCancelled(DatabaseError databaseError) {
-            // Getting Post failed, log a message
-            System.out.println("Cancelled Read from Firebase");
-            // ...
-        }
-    };
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                System.out.println("Cancelled Read from Firebase");
+                // ...
+            }
+        };
 
 
 
@@ -150,7 +147,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         if (!mayRequestContacts()) {
             return;
         }
-
+        if (!mayRequestCamera()) {
+            return;
+        }
         getLoaderManager().initLoader(0, null, this);
     }
 
@@ -163,7 +162,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
         if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
             Snackbar.make(mEmailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.ok, new View.OnClickListener() {
+                    .setAction(android.R.string.ok, new OnClickListener() {
                         @Override
                         @TargetApi(Build.VERSION_CODES.M)
                         public void onClick(View v) {
@@ -176,6 +175,28 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         return false;
     }
 
+    private boolean mayRequestCamera() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return true;
+        }
+        if (checkSelfPermission(CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        }
+        if (shouldShowRequestPermissionRationale(CAMERA)) {
+            Snackbar.make(mEmailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(android.R.string.ok, new OnClickListener() {
+                        @Override
+                        @TargetApi(Build.VERSION_CODES.M)
+                        public void onClick(View v) {
+                            requestPermissions(new String[]{CAMERA}, REQUEST_CAMERA);
+                        }
+                    });
+        } else {
+            requestPermissions(new String[]{CAMERA}, REQUEST_CAMERA);
+        }
+        return false;
+    }
+
     /**
      * Callback received when a permissions request has been completed.
      */
@@ -183,6 +204,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         if (requestCode == REQUEST_READ_CONTACTS) {
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                populateAutoComplete();
+            }
+        }
+        if (requestCode == REQUEST_CAMERA) {
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 populateAutoComplete();
             }
@@ -263,15 +289,19 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                                         Intent i = null;
                                         if (dataSnapshot.hasChild(uid)){
                                             System.out.println("Teaecher exists");
-                                            //check if teacher confirmed yet
-                                            if ((boolean)dataSnapshot.child(uid).child("confirmed").getValue() == false){
+                                            if ((boolean) dataSnapshot.child(uid).child("admin").getValue() == true){
+                                                System.out.println("Teacher is admin");
+                                                i = new Intent(LoginActivity.this, AdminTeacherActivity.class);
+                                            }                      //check if teacher confirmed yet
+                                            else if ((boolean)dataSnapshot.child(uid).child("confirmed").getValue() == false){
                                                 System.out.println("Teaecher exists unconfirmed");
-                                                //show wait to be confirmed activity
-                                            } else if((String)dataSnapshot.child(uid).child("class_id").getValue() == "-1"){
+                                                i = new Intent(LoginActivity.this,WaitForConfirmedActivity.class);
+                                            } else if(((String)dataSnapshot.child(uid).child("class_id").getValue()).equals("-1")){
                                                 //show add class screen
                                                 System.out.println("Teaecher exists no class");
-                                                i = new Intent(LoginActivity.this,createClassActivity.class);
+                                                i = new Intent(LoginActivity.this,CreateClassActivity.class);
                                             } else {
+                                                System.out.println("Tiarnan class: " + (String)dataSnapshot.child(uid).child("class_id").getValue());
                                                 System.out.println("Teaecher exists class registered");
                                                 i = new Intent(LoginActivity.this,MainTeacherActivity.class);
                                             }
