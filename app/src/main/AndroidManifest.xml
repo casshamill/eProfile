@@ -41,9 +41,38 @@
         <activity android:name=".ParentRegActivity" />
         <activity android:name=".TeacherRegActivity" />
         <activity
-            android:name=".createClassActivity"
+            android:name=".UploadText"
+            android:label="@string/title_activity_upload_text"
+            android:parentActivityName=".MainTeacherActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.cassie_app.MainTeacherActivity" />
+        </activity>
+        <activity
+            android:name=".PupilListActivity"
+            android:label="@string/title_activity_pupil_list"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".UploadPhoto"
+            android:label="@string/title_activity_upload_photo"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".WaitForConfirmedActivity"
+            android:label="@string/title_activity_wait_for_confirmed"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AdminTeacherActivity"
+            android:label="@string/title_activity_admin_teacher"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".CreateClassActivity"
             android:label="@string/title_activity_create_class"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AddPupilPopup"
+            android:label="@string/title_activity_add_pupil_popup"
+            android:theme="@style/TransparentTheme" />
     </application>
 
 </manifest>
