@@ -1,5 +1,6 @@
 package com.example.cassie_app;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -51,7 +52,9 @@ public class UploadText extends AppCompatActivity {
         contentView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                contentView.setText("");
+                if (contentView.getText().toString().equals("Content Here")){
+                    contentView.setText("");
+                }
             }
         });
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -91,5 +94,9 @@ public class UploadText extends AppCompatActivity {
             DatabaseReference newRef = mDatabase.child("pupils").child(pupil).child("feed").getRef();
             newRef.push().setValue(post);
         }
+
+        Intent output = new Intent(UploadText.this, successPost.class);
+        UploadText.this.startActivity(output);
+
     }
 }

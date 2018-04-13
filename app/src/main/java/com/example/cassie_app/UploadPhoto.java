@@ -3,14 +3,17 @@ package com.example.cassie_app;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,9 +35,12 @@ public class UploadPhoto extends AppCompatActivity {
     private String encodedImage = "";
     private String selected;
     private String uids;
+    private String file;
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
     private EditText photo_comment;
+    private ImageView imageView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,9 +56,24 @@ public class UploadPhoto extends AppCompatActivity {
                 uploadData();
             }
         });
-        Intent i = new Intent("android.media.action.IMAGE_CAPTURE");
-        if (i.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(i, CAMERA_REQUEST);
+        Bundle bundle = getIntent().getExtras();
+        selected = bundle.getString("selected");
+        uids = bundle.getString("uids");
+        file = bundle.getString("file");
+        imageView = findViewById(R.id.photo_show);
+        if (!file.equals("camera")) {
+            System.out.print("Loading from file");
+            byte[] decodedString = Base64.decode(file.getBytes(), Base64.DEFAULT);
+            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+            //byte[] decodedString = Base64.decode(file, Base64.DEFAULT);
+            //Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+            imageView.setImageBitmap(decodedByte);
+            encodedImage = file;
+        } else {
+            Intent i = new Intent("android.media.action.IMAGE_CAPTURE");
+            if (i.resolveActivity(getPackageManager()) != null) {
+                startActivityForResult(i, CAMERA_REQUEST);
+            }
         }
         ConstraintLayout inner = (ConstraintLayout) findViewById(R.id.content_include);
         System.out.println(inner);
@@ -63,9 +84,7 @@ public class UploadPhoto extends AppCompatActivity {
                 photo_comment.setText("");
             }
         });
-        Bundle bundle = getIntent().getExtras();
-        selected = bundle.getString("selected");
-        uids = bundle.getString("uids");
+
         TextView pupilsView = findViewById(R.id.pupil_names);
         pupilsView.setText(selected);
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -76,6 +95,7 @@ public class UploadPhoto extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         ImageView imageView = findViewById(R.id.photo_show);
         System.out.println("Tiarnan 1");
+        System.out.println("error: " + resultCode);
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
             System.out.println("Tiarnan 2");
             Bitmap photo = (Bitmap) data.getExtras().get("data");
@@ -84,6 +104,8 @@ public class UploadPhoto extends AppCompatActivity {
             photo.compress(Bitmap.CompressFormat.JPEG, 100, stream);
             byte[] byteFormat = stream.toByteArray();
             encodedImage = Base64.encodeToString(byteFormat, Base64.NO_WRAP);
+        } else {
+            finish();
         }
     }
 
@@ -122,6 +144,9 @@ public class UploadPhoto extends AppCompatActivity {
             DatabaseReference newRef = mDatabase.child("pupils").child(pupil).child("feed").getRef();
             newRef.push().setValue(post);
         }
+
+        Intent output = new Intent(UploadPhoto.this, successPost.class);
+        UploadPhoto.this.startActivity(output);
     }
 
 }

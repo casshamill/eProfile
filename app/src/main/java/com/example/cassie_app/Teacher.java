@@ -1,5 +1,9 @@
 package com.example.cassie_app;
 
+/**
+ * Created by Tiarnan on 04/03/2018.
+ */
+
 public class Teacher {
     private String email;
     private String name;

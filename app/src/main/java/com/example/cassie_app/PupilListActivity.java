@@ -3,6 +3,7 @@ package com.example.cassie_app;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.SparseBooleanArray;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -28,6 +30,7 @@ public class PupilListActivity extends AppCompatActivity {
     ArrayList<String> ListViewItems = new ArrayList<String>();
     ArrayList<String> uids = new ArrayList<String>();
     String parent = "";
+    boolean select_all = false;
 
     SparseBooleanArray sparseBooleanArray ;
 
@@ -49,6 +52,8 @@ public class PupilListActivity extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
         parent = bundle.getString("parent");
+
+
         FloatingActionButton fab_next = (FloatingActionButton) findViewById(R.id.fab_continue);
         fab_next.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,6 +62,15 @@ public class PupilListActivity extends AppCompatActivity {
                 Intent i = (parent.equals("text")) ? new Intent(PupilListActivity.this, UploadText.class)
                         : new Intent(PupilListActivity.this, UploadPhoto.class) ;
                 sparseBooleanArray = listview.getCheckedItemPositions();
+
+                boolean empty = true;
+                for (int j = 0; j < sparseBooleanArray.size(); j++){
+                    if (sparseBooleanArray.valueAt(j) == true) {
+                        empty = false;
+                        break;
+                    }
+                }
+                if (empty) return;
 
                 String ValueHolder = "" ;
                 String KeyHolder = "";
@@ -79,6 +93,7 @@ public class PupilListActivity extends AppCompatActivity {
 
                 i.putExtra("selected", ValueHolder );
                 i.putExtra("uids", KeyHolder);
+                i.putExtra("file", parent);
                 PupilListActivity.this.startActivity(i);
             }
         });
@@ -164,8 +179,9 @@ public class PupilListActivity extends AppCompatActivity {
     }
 
     public void selectAll(){
+        select_all = !select_all;
         for ( int i=0; i < listview.getAdapter().getCount(); i++) {
-            listview.setItemChecked(i, true);
+            listview.setItemChecked(i, select_all);
         }
     }
 }

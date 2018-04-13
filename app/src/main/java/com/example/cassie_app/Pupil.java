@@ -1,6 +1,11 @@
 package com.example.cassie_app;
 
 import com.google.firebase.database.DatabaseReference;
+
+/**
+ * Created by Eoghan on 24/03/2018.
+ */
+
 public class Pupil {
     private String name;
     private DatabaseReference feed;

@@ -47,7 +47,16 @@
     <string name="uploadtext">Upload Text Post</string>
     <string name="from_file">From File</string>
     <string name="text">Upload Text</string>
+    <string name="change_pword">Change Password</string>
+    <string name="edit_pupil">Edit Pupil</string>
     <string name="error_content_required">You must enter content for post</string>
+    <string name="delete_pupil">Remove Pupil</string>
+    <string name="submit_new">Change Password</string>
+    <string name="prompt_curr_password">Enter Current Password</string>
+    <string name="prompt_new_password">Enter New Password</string>
+    <string name="add_pupil">Add Pupil</string>
+    <string name="success_photo">Success!</string>
+    <string name="return_home">Return to the Home Screen</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 
@@ -226,4 +235,6 @@
     <string name="title_activity_admin_teacher">AdminTeacherActivity</string>
     <string name="title_activity_add_pupil_popup">New Pupil</string>
     <string name="menu_search">Search Content or Teacher</string>
+    <string name="title_activity_change_password">ChangePasswordActivity</string>
+
 </resources>

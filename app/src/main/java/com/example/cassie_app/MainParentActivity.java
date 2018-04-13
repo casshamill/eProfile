@@ -1,19 +1,25 @@
 package com.example.cassie_app;
 
+import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import com.example.cassie_app.R;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -50,7 +56,14 @@ public class MainParentActivity extends AppCompatActivity {
         });
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
-        findPupil();
+
+        Bundle bundle = getIntent().getExtras();
+
+        if( !bundle.getString("parent").equals("login")) {
+            loadData(bundle.getString("parent"));
+        } else {
+            findPupil();
+        }
         rv = findViewById(R.id.rv);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         rv.setLayoutManager(llm);
@@ -96,19 +109,19 @@ public class MainParentActivity extends AppCompatActivity {
     }
 
     private void findPupil () {
-        DatabaseReference parent = mDatabase.child("parents").child( mAuth.getCurrentUser().getUid());
-        parent.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                String pupil = (String)dataSnapshot.child("pupil_id").getValue();
-                loadData(pupil);
-            }
+            DatabaseReference parent = mDatabase.child("parents").child(mAuth.getCurrentUser().getUid());
+            parent.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    String pupil = (String) dataSnapshot.child("pupil_id").getValue();
+                    loadData(pupil);
+                }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
+                }
+            });
     }
 
     private void loadData(String pupilid){
@@ -124,8 +137,9 @@ public class MainParentActivity extends AppCompatActivity {
                     String content = (String) p.child("content").getValue();
                     String author = (String) p.child("author").getValue();
                     String image = (String) p.child("image").getValue();
+                    String date = (String) p.child("date").getValue();
                     System.out.println("Author:" + author + " -  Content : " + content);
-                    Post post = new Post(author, content, "11/03/2018", image);
+                    Post post = new Post(author, content, date , image);
                     System.out.println("post" + post);
                     posts.add(post);
                 }
