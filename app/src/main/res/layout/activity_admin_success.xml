@@ -50,8 +50,7 @@
             android:layout_marginBottom="30dp"
             android:background="@color/colorAccent"
             android:text="@string/return_home"
-            android:visibility="visible"
-            tools:text="@string/return_home" />
+            android:visibility="visible" />
 
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

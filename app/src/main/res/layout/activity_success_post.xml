@@ -38,8 +38,7 @@
             android:background="@color/colorAccent"
             android:text="@string/return_home"
             tools:layout_editor_absoluteX="57dp"
-            tools:layout_editor_absoluteY="375dp"
-            tools:text="@string/return_home" />
+            tools:layout_editor_absoluteY="375dp" />
 
         <ImageView
             android:id="@+id/imageView"
