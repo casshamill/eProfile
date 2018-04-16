@@ -79,7 +79,8 @@
             android:name=".ChangePasswordActivity"
             android:label="@string/title_activity_change_password"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".successPost"></activity>
+        <activity android:name=".successPost" />
+        <activity android:name=".AdminSuccess"></activity>
     </application>
 
 </manifest>
