@@ -1,5 +1,6 @@
 package com.example.cassie_app;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -23,8 +24,8 @@ public class WaitForConfirmedActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-                finish();
-                System.exit(0);
+                Intent i = new Intent(WaitForConfirmedActivity.this, LoginActivity.class);
+                WaitForConfirmedActivity.this.startActivity(i);
             }
         });
     }

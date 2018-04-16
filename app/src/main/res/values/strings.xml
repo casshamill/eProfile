@@ -57,6 +57,8 @@
     <string name="add_pupil">Add Pupil</string>
     <string name="success_photo">Success!</string>
     <string name="return_home">Return to the Home Screen</string>
+    <string name="admin_teacher1">Here you will find a list of unconfirmed teachers</string>
+    <string name="admin_teacher2">Please select the teacher/s you want to confirm</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 
@@ -231,8 +233,8 @@
     <string name="title_activity_upload_text">UploadText</string>
     <string name="title_activity_pupil_list">PupilListActivity</string>
     <string name="title_activity_upload_photo">UploadPhoto</string>
-    <string name="title_activity_wait_for_confirmed">WaitForConfirmedActivity</string>
-    <string name="title_activity_admin_teacher">AdminTeacherActivity</string>
+    <string name="title_activity_wait_for_confirmed">Wait to Be Confirmed</string>
+    <string name="title_activity_admin_teacher">Admin Teacher</string>
     <string name="title_activity_add_pupil_popup">New Pupil</string>
     <string name="menu_search">Search Content or Teacher</string>
     <string name="title_activity_change_password">ChangePasswordActivity</string>
