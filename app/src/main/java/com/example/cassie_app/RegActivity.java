@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -110,8 +111,9 @@ public class RegActivity extends AppCompatActivity {
                             }
                         } else {
                             // If sign in fails, display a message to the user.
-                            System.out.println("Regestration failed");
+                            System.out.println("Registration failed");
                             System.out.println("Failure Reason:" + task.getException());
+                            Toast.makeText(getApplicationContext(), "Something went wrong - " + task.getException(), Toast.LENGTH_LONG).show();
                         }
 
                         // ...

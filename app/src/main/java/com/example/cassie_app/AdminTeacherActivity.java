@@ -29,6 +29,8 @@ public class AdminTeacherActivity extends AppCompatActivity {
     ArrayList<String> ListViewItems = new ArrayList<String>();
     ArrayList<String> uids = new ArrayList<String>();
     String schoolid;
+    boolean select_all = false;
+
 
     SparseBooleanArray sparseBooleanArray ;
 
@@ -162,14 +164,24 @@ public class AdminTeacherActivity extends AppCompatActivity {
     }
 
     public void selectAll(){
-        for ( int i=0; i < listview.getAdapter().getCount(); i++) {
-            listview.setItemChecked(i, true);
+         select_all = !select_all;
+            for ( int i=0; i < listview.getAdapter().getCount(); i++) {
+                listview.setItemChecked(i, select_all);
+            }
         }
-    }
 
     public void confirm(){
         System.out.println("done clicked");
         sparseBooleanArray = listview.getCheckedItemPositions();
+
+        boolean empty = true;
+        for (int j = 0; j < sparseBooleanArray.size(); j++){
+            if (sparseBooleanArray.valueAt(j) == true) {
+                empty = false;
+                break;
+            }
+        }
+        if (empty) return;
 
         String ValueHolder = "" ;
         String KeyHolder = "";
@@ -186,6 +198,7 @@ public class AdminTeacherActivity extends AppCompatActivity {
 
             j++ ;
         }
+
 
         ValueHolder = ValueHolder.replaceAll("(,)*$", "");
         KeyHolder = KeyHolder.replaceAll("(,)*$", "");
