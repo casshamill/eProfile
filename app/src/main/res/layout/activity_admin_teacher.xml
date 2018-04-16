@@ -40,7 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="299dp"
         android:layout_marginTop="?attr/actionBarSize"
-        android:background="#aaaaaa"
+        android:background="@color/colorLight"
         android:choiceMode="multipleChoice"
         android:paddingTop="50dp"
         tools:layout_editor_absoluteY="268dp" />

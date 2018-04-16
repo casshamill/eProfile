@@ -4,64 +4,53 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.cassie_app.successPost">
+    tools:context="com.example.cassie_app.AdminSuccess">
 
-    <RelativeLayout
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/textView6"
-            android:layout_width="match_parent"
-            android:layout_height="143dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="19dp"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
             android:text="@string/success_photo"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             android:textColor="@color/colorPrimaryLight"
             android:textSize="24sp"
-            tools:layout_editor_absoluteX="60dp"
-            tools:layout_editor_absoluteY="94dp" />
-
-        <Button
-            android:id="@+id/returnadmin_btn"
-            android:layout_width="match_parent"
-            android:layout_height="43dp"
-            android:layout_above="@+id/returnhome_btn"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginBottom="19dp"
-            android:background="@color/colorAccent"
-            tools:layout_editor_absoluteX="57dp"
-            tools:layout_editor_absoluteY="375dp"
-            tools:text="@string/admin_home" />
-
-        <Button
-            android:id="@+id/returnhome_btn"
-            android:layout_width="match_parent"
-            android:layout_height="43dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginBottom="13dp"
-            android:background="@color/colorAccent"
-            tools:layout_editor_absoluteX="57dp"
-            tools:layout_editor_absoluteY="375dp"
-            tools:text="@string/return_home" />
+            android:visibility="visible" />
 
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="300dp"
             android:layout_height="300dp"
-            android:layout_alignTop="@+id/textView6"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="32dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="30dp"
+            android:visibility="visible"
             app:srcCompat="@drawable/sucess_icon" />
 
-    </RelativeLayout>
+        <Button
+            android:id="@+id/returnadmin_btn"
+            android:layout_width="match_parent"
+            android:layout_height="43dp"
+            android:layout_marginBottom="30dp"
+            android:background="@color/colorAccent"
+            android:text="@string/admin_home"
+            android:visibility="visible" />
 
+        <Button
+            android:id="@+id/returnhome_btn"
+            android:layout_width="match_parent"
+            android:layout_height="43dp"
+            android:layout_marginBottom="30dp"
+            android:background="@color/colorAccent"
+            android:visibility="visible"
+            tools:text="@string/return_home" />
+
+    </LinearLayout>
 </android.support.constraint.ConstraintLayout>

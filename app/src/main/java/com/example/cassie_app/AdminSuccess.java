@@ -14,7 +14,7 @@ public class AdminSuccess extends Activity {
         setContentView(R.layout.activity_admin_success);
 
         Button AdminHome = (Button) findViewById(R.id.returnadmin_btn);
-        Button TeacherHome = (Button) findViewById(R.id.returnhome_btn);
+        //Button TeacherHome = (Button) findViewById(R.id.returnhome_btn);
 
         AdminHome.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -24,12 +24,12 @@ public class AdminSuccess extends Activity {
             }
         });
 
-        TeacherHome.setOnClickListener(new View.OnClickListener() {
+       /* TeacherHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(AdminSuccess.this, MainTeacherActivity.class);
                 AdminSuccess.this.startActivity(i);
             }
-        });
+        }); */
     }
 }

@@ -53,6 +53,7 @@ public class AdminTeacherActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 confirm();
+
             }
         });
 
@@ -195,6 +196,8 @@ public class AdminTeacherActivity extends AppCompatActivity {
             ref.setValue(true);
             DatabaseReference school = mDatabase.child("schools").child(schoolid).child(uid).getRef();
             school.setValue(true);
+            Intent i = new Intent(AdminTeacherActivity.this, AdminSuccess.class);
+            AdminTeacherActivity.this.startActivity(i);
         }
 
 
