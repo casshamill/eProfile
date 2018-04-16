@@ -32,7 +32,7 @@
             android:layout_gravity="center"
             android:layout_marginBottom="30dp"
             android:visibility="visible"
-            app:srcCompat="@drawable/sucess_icon" />
+            android:src="@drawable/sucess_icon" />
 
         <Button
             android:id="@+id/returnadmin_btn"
@@ -49,6 +49,7 @@
             android:layout_height="43dp"
             android:layout_marginBottom="30dp"
             android:background="@color/colorAccent"
+            android:text="@string/return_home"
             android:visibility="visible"
             tools:text="@string/return_home" />
 

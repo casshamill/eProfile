@@ -36,6 +36,7 @@
             android:layout_alignParentStart="true"
             android:layout_marginBottom="66dp"
             android:background="@color/colorAccent"
+            android:text="@string/return_home"
             tools:layout_editor_absoluteX="57dp"
             tools:layout_editor_absoluteY="375dp"
             tools:text="@string/return_home" />
@@ -47,7 +48,7 @@
             android:layout_above="@+id/return_btn"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="14dp"
-            app:srcCompat="@drawable/sucess_icon" />
+            android:src="@drawable/sucess_icon" />
 
     </RelativeLayout>
 
