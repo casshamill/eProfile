@@ -196,6 +196,8 @@ public class AdminTeacherActivity extends AppCompatActivity {
             DatabaseReference school = mDatabase.child("schools").child(schoolid).child(uid).getRef();
             school.setValue(true);
         }
+
+
     }
 
 }

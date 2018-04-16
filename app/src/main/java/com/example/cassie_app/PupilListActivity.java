@@ -95,6 +95,7 @@ public class PupilListActivity extends AppCompatActivity {
                 i.putExtra("uids", KeyHolder);
                 i.putExtra("file", parent);
                 PupilListActivity.this.startActivity(i);
+
             }
         });
 
