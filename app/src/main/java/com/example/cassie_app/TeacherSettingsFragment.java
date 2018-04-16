@@ -1,6 +1,7 @@
 package com.example.cassie_app;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -31,9 +32,18 @@ public class TeacherSettingsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_teacher_settings, container, false);
         Button edit_pupil_btn = (Button) view.findViewById(R.id.button_editpupil);
+        Button add_pupil_btn = (Button) view.findViewById(R.id.button_addpupil);
         Button delete_pupil_btn = (Button) view.findViewById(R.id.button_deletepupil);
         Button delete_class_btn = (Button) view.findViewById(R.id.button_deleteclass);
         Button edit_pword_btn = (Button) view.findViewById(R.id.button_changepword);
+
+        add_pupil_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getActivity(), AddPupilPopup.class);
+                TeacherSettingsFragment.this.startActivity(i);
+            }
+        });
 
         edit_pupil_btn.setOnClickListener(new View.OnClickListener() {
             @Override

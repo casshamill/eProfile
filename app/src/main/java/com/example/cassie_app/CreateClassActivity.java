@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -52,6 +53,8 @@ public class CreateClassActivity extends AppCompatActivity {
             public void onClick(View view) {
                 postToDb();
                 System.out.println("addding to db");
+                Toast.makeText(getApplicationContext(), "Added to Database", Toast.LENGTH_LONG).show();
+
             }
         });
         listview = (ListView)findViewById(R.id.list_new_pupils);

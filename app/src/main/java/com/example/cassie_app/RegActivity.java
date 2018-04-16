@@ -113,10 +113,10 @@ public class RegActivity extends AppCompatActivity {
                             // If sign in fails, display a message to the user.
                             System.out.println("Registration failed");
                             System.out.println("Failure Reason:" + task.getException());
+                            System.out.println();
                             Toast.makeText(getApplicationContext(), "Something went wrong - " + task.getException(), Toast.LENGTH_LONG).show();
                         }
 
-                        // ...
                     }
                 });
     }
@@ -136,9 +136,10 @@ public class RegActivity extends AppCompatActivity {
 
     //TODO add more validation
     private boolean emailValid(String email){
-        if (!email.contains("@")) return false;
+       if (!email.contains("@")) return false;
         return true;
-    }
+       //mAuth.createUserWithEmailAndPassword();
+      }
 
 
 

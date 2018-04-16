@@ -4,10 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.cassie_app.AddPupilPopup">
+    tools:context="com.example.cassie_app.AddPupilPopup"
+    android:theme="@style/AppTheme.AppBarOverlay" >
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimaryDark"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/colorLight">
 
         <EditText
             android:id="@+id/pupilName"
@@ -21,10 +31,11 @@
 
         <Button
             android:id="@+id/addPupil_btn"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/pupilName"
             android:layout_centerHorizontal="true"
-            android:text="Add Pupil" />
+            android:text="Add Pupil"
+            android:background="@color/colorPrimaryDark"/>
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>
