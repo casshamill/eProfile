@@ -53,8 +53,6 @@ public class CreateClassActivity extends AppCompatActivity {
             public void onClick(View view) {
                 postToDb();
                 System.out.println("addding to db");
-
-
             }
         });
         listview = (ListView)findViewById(R.id.list_new_pupils);

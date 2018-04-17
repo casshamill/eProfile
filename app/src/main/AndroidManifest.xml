@@ -74,7 +74,7 @@
         <activity
             android:name=".AddPupilPopup"
             android:label="@string/title_activity_add_pupil_popup"
-            android:theme="@style/TransparentTheme" />
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ChangePasswordActivity"
             android:label="@string/title_activity_change_password"

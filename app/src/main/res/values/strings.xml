@@ -22,9 +22,9 @@
     <string name="reg_teacher">Teacher</string>
     <string name="reg_parent">Parent</string>
     <string name="reg_school">Enter School ID</string>
-    <string name="reg_child_name">Enter Childs Name</string>
+    <string name="reg_child_name">Enter Pupils Name</string>
     <string name="reg_class_name">Enter Class Name</string>
-    <string name="reg_child_dob">Enter Childs Date of Birth</string>
+    <string name="reg_child_dob">Enter Pupils Date of Birth</string>
     <string name="reg_pupil_id">Enter Pupil ID</string>
     <string name="reg_class_id">Enter Class ID</string>
     <string name="reg_as_teacher">Register as a Teacher</string>

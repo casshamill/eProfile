@@ -25,17 +25,35 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:ems="10"
+            android:hint="@string/reg_name"
             android:inputType="textPersonName"
-            android:text="Pupil Name"
-            android:textColor="@color/colorPrimaryLight" />
+            android:textColorHint="@color/colorPrimaryLight"
+            android:textColor="@color/colorPrimaryLight"/>
+
+
+        <EditText
+            android:id="@+id/pupilDOB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/pupilName"
+            android:layout_alignStart="@+id/pupilName"
+            android:layout_below="@+id/pupilName"
+            android:layout_marginTop="17dp"
+            android:ems="10"
+            android:hint="@string/reg_child_dob"
+            android:inputType="date"
+            android:textColorHint="@color/colorPrimaryLight"
+            android:textColor="@color/colorPrimaryLight"/>
 
         <Button
             android:id="@+id/addPupil_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/pupilName"
-            android:layout_centerHorizontal="true"
-            android:text="Add Pupil"
-            android:background="@color/colorPrimaryDark"/>
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/pupilDOB"
+            android:layout_marginTop="14dp"
+            android:background="@color/colorPrimaryDark"
+            android:text="@string/add_pupil" />
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

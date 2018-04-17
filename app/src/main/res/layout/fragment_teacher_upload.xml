@@ -21,30 +21,41 @@
             android:id="@+id/buttoncamera"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="60dp"
+            android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
-            android:text="@string/camera"/>
+            android:layout_gravity="center"
+            android:drawableLeft="@drawable/camera_icon"
+            android:gravity="left|center_vertical"
+            android:text="@string/camera" />
 
         <Button
             android:id="@+id/buttonfile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="60dp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
+            android:drawableLeft="@drawable/from_file"
+            android:gravity="left|center_vertical"
             android:text="@string/from_file" />
 
         <Button
             android:id="@+id/buttontext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_gravity="center"
             android:layout_marginBottom="20dp"
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="60dp"
+            android:layout_marginTop="20dp"
+            android:drawableLeft="@drawable/upload_text_icon"
+            android:gravity="left|center_vertical"
             android:text="@string/text" />
+
     </LinearLayout>
 
 </FrameLayout>
