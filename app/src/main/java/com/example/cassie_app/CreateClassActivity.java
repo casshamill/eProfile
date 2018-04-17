@@ -53,7 +53,7 @@ public class CreateClassActivity extends AppCompatActivity {
             public void onClick(View view) {
                 postToDb();
                 System.out.println("addding to db");
-                Toast.makeText(getApplicationContext(), "Added to Database", Toast.LENGTH_LONG).show();
+
 
             }
         });
@@ -102,5 +102,9 @@ public class CreateClassActivity extends AppCompatActivity {
         }
         ref = mDatabase.child("teachers").child(mAuth.getCurrentUser().getUid()).child("class_id").getRef();
         ref.setValue(newClass.getKey());
+
+        Toast.makeText(getApplicationContext(), "Added to Database", Toast.LENGTH_LONG).show();
+
+        finish();
     }
 }

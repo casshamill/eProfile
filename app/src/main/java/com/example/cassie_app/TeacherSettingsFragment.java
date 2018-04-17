@@ -40,7 +40,7 @@ public class TeacherSettingsFragment extends Fragment {
         add_pupil_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getActivity(), AddPupilPopup.class);
+                Intent i = new Intent(getActivity(), CreateClassActivity.class);
                 TeacherSettingsFragment.this.startActivity(i);
             }
         });
