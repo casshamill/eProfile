@@ -3,31 +3,25 @@ package com.example.cassie_app;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.SparseBooleanArray;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 
 public class CreateClassActivity extends AppCompatActivity {
 
     ListView listview ;
     ArrayList<String> ListViewItems = new ArrayList<String>();
+    ArrayList<Date> pupilDates = new ArrayList<Date>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +60,9 @@ public class CreateClassActivity extends AppCompatActivity {
         if (requestCode == 1) {
             if(resultCode == RESULT_OK) {
                 String name = data.getStringExtra("NAMEVALUE");
+                Date dob = new Date();
+                dob.setTime(data.getLongExtra("DOBVALUE", -1));
+                pupilDates.add(dob);
                 ListViewItems.add(name);
                 createList();
             }
@@ -85,24 +82,26 @@ public class CreateClassActivity extends AppCompatActivity {
     public void postToDb(){
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
         FirebaseAuth mAuth;
-        DatabaseReference ref = mDatabase.child("pupils").getRef();
+        //create class to get UID
+        DatabaseReference classRef = mDatabase.child("classes").getRef();
+        DatabaseReference newClass = classRef.push();
+        String classID = newClass.getKey();
+
+        //add pupils to pupil list
+        DatabaseReference pupilRef = mDatabase.child("pupils").getRef();
         mAuth = FirebaseAuth.getInstance();
         ArrayList<String> uids = new ArrayList<String>();
         for (int i = 0; i < ListViewItems.size(); i++){
-            DatabaseReference newRef = ref.push();
-            newRef.setValue(new Pupil(ListViewItems.get(i)));
+            DatabaseReference newRef = pupilRef.push();
+            newRef.setValue(new Pupil(ListViewItems.get(i), pupilDates.get(i), classID));
             uids.add(newRef.getKey());
         }
-        ref = mDatabase.child("classes").getRef();
-        DatabaseReference newClass = ref.push();
+
+        // add pupil names to class list
         for (int i = 0; i < ListViewItems.size(); i++){
             newClass.child(uids.get(i)).setValue(ListViewItems.get(i));
         }
-        ref = mDatabase.child("teachers").child(mAuth.getCurrentUser().getUid()).child("class_id").getRef();
-        ref.setValue(newClass.getKey());
-
-        Toast.makeText(getApplicationContext(), "Added to Database", Toast.LENGTH_LONG).show();
-
-        finish();
+        DatabaseReference teacherClassRef = mDatabase.child("teachers").child(mAuth.getCurrentUser().getUid()).child("class_id").getRef();
+        teacherClassRef.setValue(newClass.getKey());
     }
 }
