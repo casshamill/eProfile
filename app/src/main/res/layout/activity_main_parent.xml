@@ -33,6 +33,12 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             android:textSize="24sp" />
 
+        <TextView
+            android:id="@+id/gold_count"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/title_date" />
 
     </android.support.design.widget.AppBarLayout>
 
@@ -50,5 +56,13 @@
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|end"
         app:srcCompat="@drawable/ic_search_black_24dp" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_pdf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        android:layout_gravity="bottom|end"
+        app:srcCompat="@drawable/ic_picture_as_pdf_black_24dp" />
 
 </android.support.design.widget.CoordinatorLayout>

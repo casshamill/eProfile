@@ -1,12 +1,13 @@
 package com.example.cassie_app;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -15,25 +16,23 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class ParentRegActivity extends AppCompatActivity {
 
     private EditText childNameView;
     private EditText childDobView;
-    private EditText classNameView;
+    private EditText classUIDView;
 
-    private String uid;
     private String email;
     private String name;
     private String pupil_id;
     private boolean pupil_found;
-
-    private Pattern pattern;
-    private Matcher matcher;
 
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
@@ -45,7 +44,7 @@ public class ParentRegActivity extends AppCompatActivity {
 
         childNameView = (EditText) findViewById(R.id.child_name);
         childDobView = (EditText) findViewById(R.id.child_dob);
-        classNameView = (EditText) findViewById(R.id.class_name);
+        classUIDView = (EditText) findViewById(R.id.class_uid);
 
         Button RegButton = (Button) findViewById(R.id.reg_submit3);
         RegButton.setOnClickListener(new View.OnClickListener() {
@@ -62,48 +61,53 @@ public class ParentRegActivity extends AppCompatActivity {
     private void AttemptParentRegistration() {
         //validate
         final String childName = childNameView.getText().toString();
-        String childDob = childDobView.getText().toString();
-        String className = classNameView.getText().toString();
+        final Date childDob = (Date) childDobView.getText();
+        String classUID = classUIDView.getText().toString();
 
         if (TextUtils.isEmpty(childName)) {
             childNameView.setError(getString(R.string.error_field_required));
             childNameView.requestFocus();
             return;
         }
-        if (TextUtils.isEmpty(childDob)) {
+        if (TextUtils.isEmpty(childDobView.getText().toString())) {
             childDobView.setError(getString(R.string.error_field_required));
             childDobView.requestFocus();
             return;
         }
-        if (TextUtils.isEmpty(className)) {
-            classNameView.setError(getString(R.string.error_field_required));
-            classNameView.requestFocus();
+        if (TextUtils.isEmpty(classUID)) {
+            classUIDView.setError(getString(R.string.error_field_required));
+            classUIDView.requestFocus();
             return;
         }
-        /*if (!(DateValidator(childDob))) {
-            childDobView.setError(getString(R.string.error_date));
-            childDobView.requestFocus();
-            return; }*/
-
+        Calendar cal = Calendar.getInstance();
+        cal.setLenient(false);
+        cal.setTime(childDob);
+        try {
+            cal.getTime();
+        }
+        catch (Exception e) {
+            System.out.println("Invalid date");
+            Toast.makeText(ParentRegActivity.this, "You have entered an invalid date, please try again.", Toast.LENGTH_LONG).show();
+            return;
+        }
         pupil_found = false;
         //find child uid
-        DatabaseReference childRef = mDatabase.child("pupils");
-        childRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        //TODO: Better to get class id from parents as part of registration and search from there using dob to validate.
+        DatabaseReference classRef = mDatabase.child("classes").child(classUID);
+        if (classRef == null) {
+            Toast.makeText(ParentRegActivity.this, "You have entered an invalid class ID, please try again.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        //BUILD LIST OF PUPILS IN CLASS
+        final ArrayList<String> pupils = new ArrayList<String>();
+        classRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 System.out.println("Finding child");
                 for (DataSnapshot d : dataSnapshot.getChildren()){
-                    String currname = (String) d.child("name").getValue();
-                    if (currname.equals(childName)){
-                        pupil_id = d.getKey();
-                        pupil_found = true;
-                        register();
-                        break;
-                    }
+                    pupils.add(d.getKey());
                 }
-                if (pupil_found == false){
-                    System.out.println("Pupil " + childName + "not found, Registreation unsucessful");
-                }
+                findPupil(pupils, childName, childDob);
             }
 
             @Override
@@ -111,6 +115,42 @@ public class ParentRegActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void findPupil(ArrayList<String> pupils, final String childName, final Date dob) {
+        for (String pupil : pupils) {
+            DatabaseReference pupilRef = mDatabase.child("pupils").child(pupil);
+            pupilRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    String currname = (String) dataSnapshot.child("name").getValue();
+                    if (currname.equals(childName)) {
+                        //check dob
+                        String currentdobstr = (String) dataSnapshot.child("dob").getValue();
+                        DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                        Date currentdob = new Date();
+                        try {
+                            currentdob = sdf.parse(currentdobstr);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        if (currentdob.equals(dob)) {
+                            pupil_id = dataSnapshot.getKey();
+                            pupil_found = true;
+                            register();
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
+        if (pupil_found == false) {
+            System.out.println("Pupil " + childName + "not found, Registreation unsucessful");
+        }
     }
 
     private void register(){

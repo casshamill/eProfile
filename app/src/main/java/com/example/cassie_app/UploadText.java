@@ -6,7 +6,11 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,10 +27,15 @@ import java.util.Date;
 public class UploadText extends AppCompatActivity {
 
     EditText contentView;
+    private Spinner spinner;
     String selected;
+    String area;
+    CheckBox isGolden;
     String uids;
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
+    private static final String[]areas = {"Math", "Science", "Geography"};
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +43,24 @@ public class UploadText extends AppCompatActivity {
         setContentView(R.layout.activity_upload_text);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        isGolden = findViewById(R.id.goldenBox);
+
+        spinner = (Spinner)findViewById(R.id.spinner);
+        ArrayAdapter<String>adapter = new ArrayAdapter<String>(UploadText.this,
+                android.R.layout.simple_spinner_item,areas);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                area = (String) adapterView.getItemAtPosition(i);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -42,12 +69,15 @@ public class UploadText extends AppCompatActivity {
                 uploadPost();
             }
         });
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Bundle bundle = getIntent().getExtras();
         selected = bundle.getString("selected");
         uids = bundle.getString("uids");
+
         TextView pupilsView = findViewById(R.id.pupil_name);
         pupilsView.setText(selected);
+
         contentView = findViewById(R.id.content_text);
         contentView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,6 +87,7 @@ public class UploadText extends AppCompatActivity {
                 }
             }
         });
+
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
     }
@@ -88,7 +119,8 @@ public class UploadText extends AppCompatActivity {
         Date c = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
         String formattedDate = df.format(c);
-        Post post = new Post(name, content, formattedDate, null);
+        boolean golden = isGolden.isChecked();
+        Post post = new Post(name, content, formattedDate, null, area, golden);
         String[] pupils = uids.split(",");
         for(String pupil: pupils){
             DatabaseReference newRef = mDatabase.child("pupils").child(pupil).child("feed").getRef();

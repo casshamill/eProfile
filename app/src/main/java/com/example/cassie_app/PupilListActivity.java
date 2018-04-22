@@ -3,15 +3,14 @@ package com.example.cassie_app;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.SparseBooleanArray;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -20,6 +19,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 
 public class PupilListActivity extends AppCompatActivity {
@@ -31,6 +33,7 @@ public class PupilListActivity extends AppCompatActivity {
     ArrayList<String> uids = new ArrayList<String>();
     String parent = "";
     boolean select_all = false;
+    private String class_id;
 
     SparseBooleanArray sparseBooleanArray ;
 
@@ -54,59 +57,28 @@ public class PupilListActivity extends AppCompatActivity {
         parent = bundle.getString("parent");
 
 
+
         FloatingActionButton fab_next = (FloatingActionButton) findViewById(R.id.fab_continue);
         fab_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 System.out.println("Continue clicked");
-                Intent i = (parent.equals("text")) ? new Intent(PupilListActivity.this, UploadText.class)
-                        : new Intent(PupilListActivity.this, UploadPhoto.class) ;
-                sparseBooleanArray = listview.getCheckedItemPositions();
-
-                boolean empty = true;
-                for (int j = 0; j < sparseBooleanArray.size(); j++){
-                    if (sparseBooleanArray.valueAt(j) == true) {
-                        empty = false;
-                        break;
-                    }
-                }
-                if (empty) return;
-
-                String ValueHolder = "" ;
-                String KeyHolder = "";
-
-                int j = 0 ;
-
-                while (j < sparseBooleanArray.size()) {
-
-                    if (sparseBooleanArray.valueAt(j)) {
-
-                        ValueHolder += ListViewItems.get(sparseBooleanArray.keyAt(j)) + ",";
-                        KeyHolder += uids.get(sparseBooleanArray.keyAt(j)) + ",";
-                    }
-
-                    j++ ;
-                }
-
-                ValueHolder = ValueHolder.replaceAll("(,)*$", "");
-                KeyHolder = KeyHolder.replaceAll("(,)*$", "");
-
-                i.putExtra("selected", ValueHolder );
-                i.putExtra("uids", KeyHolder);
-                i.putExtra("file", parent);
-                PupilListActivity.this.startActivity(i);
-
+                continue_clicked();
             }
         });
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
         listview = (ListView)findViewById(R.id.list);
+        if (parent.equals("edit")) {
+            listview.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+        }
 
-        DatabaseReference classid = mDatabase.child("teachers").child( mAuth.getCurrentUser().getUid()).child("class_id");
+        final DatabaseReference classid = mDatabase.child("teachers").child( mAuth.getCurrentUser().getUid()).child("class_id");
         classid.addListenerForSingleValueEvent(new ValueEventListener() {
                                           @Override
                                           public void onDataChange(DataSnapshot dataSnapshot) {
+                                              class_id = (String) dataSnapshot.getValue();
                                               loadData((String)dataSnapshot.getValue());
                                           }
 
@@ -119,6 +91,82 @@ public class PupilListActivity extends AppCompatActivity {
                                       });
 
 
+    }
+
+    private void continue_clicked() {
+
+        boolean empty = true;
+        for (int j = 0; j < sparseBooleanArray.size(); j++){
+            if (sparseBooleanArray.valueAt(j) == true) {
+                empty = false;
+                break;
+            }
+        }
+        if (empty) return;
+
+        sparseBooleanArray = listview.getCheckedItemPositions();
+
+        String ValueHolder = "" ;
+        String KeyHolder = "";
+
+        int j = 0 ;
+
+        while (j < sparseBooleanArray.size()) {
+
+            if (sparseBooleanArray.valueAt(j)) {
+
+                ValueHolder += ListViewItems.get(sparseBooleanArray.keyAt(j)) + ",";
+                KeyHolder += uids.get(sparseBooleanArray.keyAt(j)) + ",";
+            }
+
+            j++ ;
+        }
+
+        ValueHolder = ValueHolder.replaceAll("(,)*$", "");
+        KeyHolder = KeyHolder.replaceAll("(,)*$", "");
+
+        if (parent.equals("delete")) {
+            deletePupils(KeyHolder);
+            finish();
+            return;
+        }
+        //check whether called by upload photo, upload text, edit pupil or delete pupil.
+        Intent i = null;
+        switch (parent) {
+            case "text" :
+                i = new Intent(PupilListActivity.this, UploadText.class);
+                break;
+            case "camera" :
+                i = new Intent(PupilListActivity.this, UploadPhoto.class);
+                break;
+            case "edit" :
+                i = new Intent(PupilListActivity.this, EditPupilActivity.class);
+                break;
+            default: //file
+                i = new Intent(PupilListActivity.this, UploadPhoto.class);
+        }
+        try {
+            System.setErr(new PrintStream(new File("log.txt")));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        i.putExtra("selected", ValueHolder );
+        i.putExtra("uids", KeyHolder);
+        i.putExtra("file", parent);
+        System.out.println("Starting activity ");
+        PupilListActivity.this.startActivity(i);
+        System.out.println("Ending activity ");
+
+    }
+
+    private void deletePupils(String keys){
+        // remove from class list keep profile
+        DatabaseReference classRef = mDatabase.child("classes").child(class_id);
+        String[] pupils = keys.split(",");
+        for (String pupilid : pupils){
+            classRef.child(pupilid).removeValue();
+        }
     }
 
     public void createList(){
@@ -161,9 +209,11 @@ public class PupilListActivity extends AppCompatActivity {
 
     public void loadData(String class_id){
         DatabaseReference class_ = mDatabase.child("classes").child(class_id);
-        class_.addListenerForSingleValueEvent(new ValueEventListener() {
+        class_.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                ListViewItems.clear();
+                uids.clear();
                 for (DataSnapshot pupil : dataSnapshot.getChildren()) {
                     ListViewItems.add((String)pupil.getValue());
                     uids.add(pupil.getKey().toString());

@@ -7,14 +7,16 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,11 +38,14 @@ public class UploadPhoto extends AppCompatActivity {
     private String selected;
     private String uids;
     private String file;
+    String area;
     private DatabaseReference mDatabase;
+    CheckBox isGolden;
     private FirebaseAuth mAuth;
     private EditText photo_comment;
     private ImageView imageView;
-
+    private Spinner spinner;
+    private static final String[]areas = {"Math", "Science", "Geography"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +61,26 @@ public class UploadPhoto extends AppCompatActivity {
                 uploadData();
             }
         });
+
+        isGolden = findViewById(R.id.goldenBox);
+
+        spinner = (Spinner)findViewById(R.id.spinner);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(UploadPhoto.this,
+                android.R.layout.simple_spinner_item,areas);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                area = (String) adapterView.getItemAtPosition(i);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
         Bundle bundle = getIntent().getExtras();
         selected = bundle.getString("selected");
         uids = bundle.getString("uids");
@@ -138,7 +163,8 @@ public class UploadPhoto extends AppCompatActivity {
         Date c = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
         String formattedDate = df.format(c);
-        Post post = new Post(name, content, formattedDate, encodedImage);
+        boolean golden = isGolden.isChecked();
+        Post post = new Post(name, content, formattedDate, encodedImage, area, golden);
         String[] pupils = uids.split(",");
         for(String pupil: pupils){
             DatabaseReference newRef = mDatabase.child("pupils").child(pupil).child("feed").getRef();

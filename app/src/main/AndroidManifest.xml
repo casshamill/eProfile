@@ -74,13 +74,32 @@
         <activity
             android:name=".AddPupilPopup"
             android:label="@string/title_activity_add_pupil_popup"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/TransparentTheme" />
         <activity
             android:name=".ChangePasswordActivity"
             android:label="@string/title_activity_change_password"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".successPost" />
-        <activity android:name=".AdminSuccess"></activity>
+        <activity android:name=".AdminSuccess" />
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+
+        <activity
+            android:name=".ImageActivity"
+            android:label="@string/title_activity_image"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".EditPupilActivity"
+            android:label="@string/title_activity_edit_pupil"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

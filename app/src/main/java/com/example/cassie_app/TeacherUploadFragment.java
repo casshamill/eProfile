@@ -10,14 +10,11 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
@@ -69,7 +66,7 @@ public class TeacherUploadFragment extends Fragment {
 
     public void openGallery(){
         Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(galleryIntent, 1);
     }
 
@@ -100,6 +97,7 @@ public class TeacherUploadFragment extends Fragment {
                 Toast.makeText(getActivity(), "You haven't picked an Image",Toast.LENGTH_LONG).show();
             }
         } catch (Exception e) {
+            e.printStackTrace();
             Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_LONG).show();
         }
     }

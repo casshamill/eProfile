@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -20,7 +21,7 @@ public class CreateClassActivity extends AppCompatActivity {
 
     ListView listview ;
     ArrayList<String> ListViewItems = new ArrayList<String>();
-    ArrayList<Date> pupilDates = new ArrayList<Date>();
+    ArrayList<Long> pupilDates = new ArrayList<Long>();
 
 
     @Override
@@ -47,6 +48,9 @@ public class CreateClassActivity extends AppCompatActivity {
             public void onClick(View view) {
                 postToDb();
                 System.out.println("addding to db");
+                Toast.makeText(CreateClassActivity.this, "Class Created", Toast.LENGTH_LONG );
+                Intent i = new Intent(CreateClassActivity.this, MainTeacherActivity.class);
+                CreateClassActivity.this.startActivity(i);
             }
         });
         listview = (ListView)findViewById(R.id.list_new_pupils);
@@ -60,8 +64,7 @@ public class CreateClassActivity extends AppCompatActivity {
         if (requestCode == 1) {
             if(resultCode == RESULT_OK) {
                 String name = data.getStringExtra("NAMEVALUE");
-                Date dob = new Date();
-                dob.setTime(data.getLongExtra("DOBVALUE", -1));
+                long dob = data.getLongExtra("DOBVALUE", -1);
                 pupilDates.add(dob);
                 ListViewItems.add(name);
                 createList();

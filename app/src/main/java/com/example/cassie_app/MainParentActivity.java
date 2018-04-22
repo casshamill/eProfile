@@ -1,25 +1,24 @@
 package com.example.cassie_app;
 
-import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.example.cassie_app.R;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -27,7 +26,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.pdf.PdfWriter;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +45,7 @@ public class MainParentActivity extends AppCompatActivity {
     List<Post> posts;
     RecyclerView rv;
     RVAdapter adapter;
+    TextView gold_count;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,14 +55,25 @@ public class MainParentActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_search);
+        FloatingActionButton fab_pdf = (FloatingActionButton) findViewById(R.id.fab_pdf);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                //do search --> maybe use menu search bar
             }
         });
+        fab_pdf.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                createPDF();
+            }
+        });
+        gold_count = (TextView)findViewById(R.id.gold_count);
+
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
+
+        posts = new ArrayList<>();
 
         Bundle bundle = getIntent().getExtras();
 
@@ -67,7 +85,6 @@ public class MainParentActivity extends AppCompatActivity {
         rv = findViewById(R.id.rv);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         rv.setLayoutManager(llm);
-        posts = new ArrayList<>();
     }
 
     @Override
@@ -108,6 +125,66 @@ public class MainParentActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void addContent(Document document, View view)
+            throws DocumentException
+    {
+        try
+        {
+            view.buildDrawingCache();
+
+            Bitmap bmp = view.getDrawingCache();
+
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            Image image = Image.getInstance(stream.toByteArray());
+            image.scalePercent(70);
+            image.setAlignment(Image.MIDDLE);
+            document.add(image);
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+    }
+
+
+    private void createPDF() {
+        ArrayList<View> mPrintView = new ArrayList<>();
+
+        View mRootView = findViewById(android.R.id.content);
+        //Create a directory for your PDF
+        File pdfDir = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DOCUMENTS), "MyApp");
+        if (!pdfDir.exists()){
+            pdfDir.mkdirs();
+            System.out.println("Creating directory");
+        }
+
+        File pdfFile = new File(pdfDir, "myPdfFile.pdf");
+
+        try {
+            pdfFile.createNewFile();
+            Document  document = new Document();
+            PdfWriter.getInstance(document, new FileOutputStream(pdfFile));
+            document.open();
+            for (int childCount = rv.getChildCount(), i = 0; i < childCount; ++i) {
+                final RecyclerView.ViewHolder holder = rv.getChildViewHolder(rv.getChildAt(i));
+                addContent(document, holder.itemView);
+            }
+            document.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        Uri uri = FileProvider.getUriForFile(MainParentActivity.this, BuildConfig.APPLICATION_ID + ".provider", pdfFile );
+        intent.setDataAndType(uri, "application/pdf");
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        startActivity(intent);
+    }
+
     private void findPupil () {
             DatabaseReference parent = mDatabase.child("parents").child(mAuth.getCurrentUser().getUid());
             parent.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -133,16 +210,21 @@ public class MainParentActivity extends AppCompatActivity {
                 DataSnapshot feed = dataSnapshot.child("feed");
                 String name = (String) dataSnapshot.child("name").getValue();
                 nameView.setText(name);
+                int count = 0;
                 for (DataSnapshot p : feed.getChildren()) {
                     String content = (String) p.child("content").getValue();
                     String author = (String) p.child("author").getValue();
                     String image = (String) p.child("image").getValue();
                     String date = (String) p.child("date").getValue();
-                    System.out.println("Author:" + author + " -  Content : " + content);
-                    Post post = new Post(author, content, date , image);
+                    String area = (String) p.child("area").getValue();
+                    boolean golden = (boolean) p.child("golden").getValue();
+                    if (golden) count ++;
+                    System.out.println("Author:" + author + " -  Content : " + content + "Area : " + area);
+                    Post post = new Post(author, content, date , image, area, golden);
                     System.out.println("post" + post);
                     posts.add(post);
                 }
+                gold_count.setText(String.valueOf(count));
                 RVAdapter adapter = new RVAdapter(posts);
                 rv.setAdapter(adapter);
             }
@@ -155,3 +237,5 @@ public class MainParentActivity extends AppCompatActivity {
     }
 
 }
+
+;

@@ -11,13 +11,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class RegActivity extends AppCompatActivity {
 
@@ -30,6 +31,8 @@ public class RegActivity extends AppCompatActivity {
     private EditText pwordConfView;
     private RadioGroup radioGroupView;
     private View mRegFormView;
+
+    private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
 
     @Override
@@ -58,6 +61,9 @@ public class RegActivity extends AppCompatActivity {
         });
 
         mRegFormView = (View) findViewById(R.id.reg_content);
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mAuth = FirebaseAuth.getInstance();
     }
 
     private void AttemptRegistration(){
@@ -67,7 +73,6 @@ public class RegActivity extends AppCompatActivity {
         final String email = emailView.getText().toString();
         String pw = pwordView.getText().toString();
         String pw_conf = pwordConfView.getText().toString();
-        mAuth = FirebaseAuth.getInstance();
 
         if (TextUtils.isEmpty(schoolId)){
             schoolIdView.setError(getString(R.string.error_field_required));
@@ -103,7 +108,13 @@ public class RegActivity extends AppCompatActivity {
                                 RegActivity.this.startActivity(i);
                             }
                             else if (radioGroupView.getCheckedRadioButtonId() == R.id.reg_teacher){
-                                Intent i = new Intent(RegActivity.this, TeacherRegActivity.class);
+                                String uid = mAuth.getCurrentUser().getUid();
+                                Teacher t = new Teacher(email, name, schoolId);
+                                DatabaseReference newRef = mDatabase.child("teachers").getRef();
+                                newRef.child(uid).setValue(t);
+                                newRef = mDatabase.child("schools").child(schoolId);
+                                newRef.child(uid).setValue(t.getConfirmed());
+                                Intent i = new Intent(RegActivity.this, WaitForConfirmedActivity.class);
                                 i.putExtra("EMAILVALUE",email);
                                 i.putExtra("NAMEVALUE",name);
                                 i.putExtra("SCHOOLVALUE",schoolId);
@@ -111,12 +122,11 @@ public class RegActivity extends AppCompatActivity {
                             }
                         } else {
                             // If sign in fails, display a message to the user.
-                            System.out.println("Registration failed");
+                            System.out.println("Regestration failed");
                             System.out.println("Failure Reason:" + task.getException());
-                            System.out.println();
-                            Toast.makeText(getApplicationContext(), "Something went wrong - " + task.getException(), Toast.LENGTH_LONG).show();
                         }
 
+                        // ...
                     }
                 });
     }
@@ -136,10 +146,9 @@ public class RegActivity extends AppCompatActivity {
 
     //TODO add more validation
     private boolean emailValid(String email){
-       if (!email.contains("@")) return false;
+        if (!email.contains("@")) return false;
         return true;
-       //mAuth.createUserWithEmailAndPassword();
-      }
+    }
 
 
 

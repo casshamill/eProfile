@@ -1,35 +1,33 @@
 package com.example.cassie_app;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.SearchView;
 import android.widget.TextView;
 
-import java.io.UnsupportedEncodingException;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-
-/**
- * Created by Tiarnan on 11/03/2018.
- */
 
 public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ContentViewHolder> {
 
     List<Post> posts;
     List<Post> postsCopy;
-    static ImageView photo;
     Bitmap decodedByte;
-
     public static class ContentViewHolder extends RecyclerView.ViewHolder {
 
         CardView cv;
@@ -37,20 +35,26 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ContentViewHolder>
         TextView content;
         TextView date;
         ImageButton thumb;
+        Context context;
+        CheckBox golden;
+        TextView area;
 
         public ContentViewHolder(View itemView) {
             super(itemView);
+            context = itemView.getContext();
             cv = (CardView)itemView.findViewById(R.id.card_view);
             description = (TextView)itemView.findViewById(R.id.description);
             content = (TextView)itemView.findViewById(R.id.feed_content);
-            photo = (ImageView)itemView.findViewById(R.id.feed_photo);
             date = (TextView)itemView.findViewById(R.id.date);
+            golden = (CheckBox)itemView.findViewById(R.id.golden);
             thumb = (ImageButton)itemView.findViewById(R.id.feed_thumb);
+            area = (TextView)itemView.findViewById(R.id.area_indc);
         }
     }
 
     public RVAdapter(List<Post> posts) {
         this.posts = posts;
+        Collections.reverse(this.posts);
         this.postsCopy = new ArrayList<Post>();
         this.postsCopy.addAll(posts);
     }
@@ -59,6 +63,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ContentViewHolder>
     public ContentViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.content_main_parent, parent, false);
         ContentViewHolder cvh = new ContentViewHolder(v);
+        //addCardView(v);
         return cvh;
     }
 
@@ -68,14 +73,16 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ContentViewHolder>
         holder.date.setText(posts.get(position).date);
         if (posts.get(position).image != null) {
             try {
-                byte[] decodedString = Base64.decode(posts.get(position).image.getBytes(), Base64.DEFAULT);
+                final byte[] decodedString = Base64.decode(posts.get(position).image.getBytes(), Base64.DEFAULT);
                 decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
                 holder.thumb.setImageBitmap(decodedByte);
                 holder.thumb.setVisibility(View.VISIBLE);
                 holder.thumb.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        enlargeImage(holder);
+                        ImageButton btn = (ImageButton)view.findViewById(R.id.feed_thumb);
+                        Bitmap b = ((BitmapDrawable)btn.getDrawable()).getBitmap();
+                        enlargeImage(holder, b);
                     }
                 });
             } catch (Exception e) {
@@ -83,12 +90,25 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ContentViewHolder>
             }
         }
         holder.content.setText(posts.get(position).content);
-
-    }
-
-    @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
-        super.onAttachedToRecyclerView(recyclerView);
+        String background = null;
+        switch (posts.get(position).area) {
+            case "Math":
+                holder.area.setBackgroundResource(R.drawable.area_indicator_math);
+                holder.area.setText("Math");
+                break;
+            case "Science":
+                holder.area.setBackgroundResource(R.drawable.area_indicator_sci);
+                holder.area.setText("Science");
+                break;
+            case "Geography":
+                holder.area.setBackgroundResource(R.drawable.area_indicator_geo);
+                holder.area.setText("Geography");
+                break;
+        }
+        if (posts.get(position).golden){
+            System.out.println("star at pos : " + position);
+            holder.golden.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -96,10 +116,36 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ContentViewHolder>
         return posts.size();
     }
 
-    public void enlargeImage(ContentViewHolder holder){
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+    }
+
+    private void enlargeImage(ContentViewHolder holder, Bitmap bitmap){
+        //Change this to popup activity like add pupil
         System.out.println("Enlarging image");
-        photo.setImageBitmap(Bitmap.createScaledBitmap(decodedByte, (decodedByte.getWidth())*5, (decodedByte.getHeight())*5, false));
-        photo.setVisibility(View.VISIBLE);
+        String filePath= tempFileImage(holder.context,bitmap,"name");
+        Intent i = new Intent(holder.context, ImageActivity.class);
+        i.putExtra("path", filePath);
+        holder.context.startActivity(i);
+    }
+
+    public static String tempFileImage(Context context, Bitmap bitmap, String name) {
+
+        File outputDir = context.getCacheDir();
+        File imageFile = new File(outputDir, name + ".jpg");
+
+        OutputStream os;
+        try {
+            os = new FileOutputStream(imageFile);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
+            os.flush();
+            os.close();
+        } catch (Exception e) {
+            Log.e(context.getClass().getSimpleName(), "Error writing file", e);
+        }
+
+        return imageFile.getAbsolutePath();
     }
 
     public void filter(String text) {
@@ -116,4 +162,5 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ContentViewHolder>
         }
         notifyDataSetChanged();
     }
+
 }

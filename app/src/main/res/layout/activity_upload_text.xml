@@ -29,6 +29,22 @@
         tools:layout_editor_absoluteX="60dp"
         tools:layout_editor_absoluteY="150dp" />
 
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="110dp"/>
+
+    <CheckBox
+        android:id="@+id/goldenBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        app:layout_anchor="@id/pupil_name"
+        android:checked="false"
+        android:layout_marginLeft="300dp"
+        android:button="@drawable/cb_selector" />
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="match_parent"

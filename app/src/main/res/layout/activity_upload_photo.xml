@@ -20,6 +20,13 @@
 
     </android.support.design.widget.AppBarLayout>
 
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="110dp"/>
+
     <include
         android:id="@+id/content_include"
         layout="@layout/content_upload_photo" />
@@ -31,5 +38,6 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@drawable/ic_file_upload_black_24dp" />
+
 
 </android.support.design.widget.CoordinatorLayout>

@@ -65,7 +65,6 @@
             android:layout_alignParentRight="true"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="Pupil Name"
             android:textColor="@color/colorPrimaryLight" />
 
     </RelativeLayout>

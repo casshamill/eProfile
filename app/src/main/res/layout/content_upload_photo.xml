@@ -48,6 +48,17 @@
             android:layout_marginTop="15dp"
             android:ems="10"
             android:inputType="textMultiLine" />
+
+        <CheckBox
+            android:id="@+id/goldenBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:button="@drawable/cb_selector"
+            android:layout_below="@+id/photo_comment"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="80dp"
+            android:checked="false"
+            android:layout_toRightOf="@id/photo_comment"/>
     </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>

@@ -23,7 +23,7 @@
     <string name="reg_parent">Parent</string>
     <string name="reg_school">Enter School ID</string>
     <string name="reg_child_name">Enter Pupils Name</string>
-    <string name="reg_class_name">Enter Class Name</string>
+    <string name="reg_class_uid">Enter Class ID</string>
     <string name="reg_child_dob">Enter Pupils Date of Birth</string>
     <string name="reg_pupil_id">Enter Pupil ID</string>
     <string name="reg_class_id">Enter Class ID</string>
@@ -59,7 +59,8 @@
     <string name="return_home">Return to the Teacher Home Screen</string>
     <string name="admin_teacher1">Here you will find a list of unconfirmed teachers</string>
     <string name="admin_teacher2">Please select the teacher/s you want to confirm</string>
-
+    <string name="title_activity_image">ImageActivity</string>
+    <string name="title_activity_edit_pupil">EditPupilActivity</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_reg">Register for eProfile</string>
     <string name="title_activity_registration">RegistrationActivity</string>
