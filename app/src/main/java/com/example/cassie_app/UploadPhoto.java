@@ -45,7 +45,7 @@ public class UploadPhoto extends AppCompatActivity {
     private EditText photo_comment;
     private ImageView imageView;
     private Spinner spinner;
-    private static final String[]areas = {"Math", "Science", "Geography"};
+    private static final String[]areas = {"Numeracy", "WAU", "Arts", "Literacy", "PE", "PD & MU"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,12 +88,19 @@ public class UploadPhoto extends AppCompatActivity {
         imageView = findViewById(R.id.photo_show);
         if (!file.equals("camera")) {
             System.out.print("Loading from file");
+            Bitmap decodedByte = BitmapFactory.decodeFile(file);
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            decodedByte.compress(Bitmap.CompressFormat.JPEG, 10, stream);
+            byte[] byteFormat = stream.toByteArray();
+            encodedImage = Base64.encodeToString(byteFormat, Base64.NO_WRAP);
+            System.out.println("Encoded image: " + encodedImage);
+           /*
             byte[] decodedString = Base64.decode(file.getBytes(), Base64.DEFAULT);
             Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
             //byte[] decodedString = Base64.decode(file, Base64.DEFAULT);
-            //Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+            //Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);*/
             imageView.setImageBitmap(decodedByte);
-            encodedImage = file;
+            //encodedImage = file;
         } else {
             Intent i = new Intent("android.media.action.IMAGE_CAPTURE");
             if (i.resolveActivity(getPackageManager()) != null) {
@@ -119,10 +126,10 @@ public class UploadPhoto extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         ImageView imageView = findViewById(R.id.photo_show);
-        System.out.println("Tiarnan 1");
+        System.out.println("Cassie 1");
         System.out.println("error: " + resultCode);
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
-            System.out.println("Tiarnan 2");
+            System.out.println("Cassie 2");
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             imageView.setImageBitmap(photo);
             ByteArrayOutputStream stream = new ByteArrayOutputStream();

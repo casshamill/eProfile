@@ -16,6 +16,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 public class EditPupilActivity extends AppCompatActivity {
 
     private String classUID;
@@ -23,6 +28,7 @@ public class EditPupilActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
     EditText editName;
+    EditText editDOB;
     TextView pupilName;
 
     @Override
@@ -41,7 +47,7 @@ public class EditPupilActivity extends AppCompatActivity {
         });
 
         editName = (EditText) findViewById(R.id.editPupilName);
-
+        editDOB = (EditText) findViewById(R.id.editPupilDOB);
         pupilName = (TextView) findViewById(R.id.pupil_name);
 
         Bundle bundle = getIntent().getExtras();
@@ -58,10 +64,46 @@ public class EditPupilActivity extends AppCompatActivity {
     private void EditPupil(){
         String newName = editName.getText().toString();
 
+        String dob_str = editDOB.getText().toString();
+        String[] split = dob_str.split("/");
+        if(split[split.length-1].length() < 4 ){
+            editDOB.setError("Please use the format DD/MM/YYYY");
+            return;
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        sdf.setLenient(false);
+        Date dob = null;
+        try {
+            dob = sdf.parse(dob_str);
+            Date now = new Date();
+            if (now.getTime() - dob.getTime() < 0) {
+                Toast.makeText(EditPupilActivity.this, "You have entered an invalid date, please try again.", Toast.LENGTH_LONG).show();
+                return;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Toast.makeText(EditPupilActivity.this, "You have entered an invalid date, please try again.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        Calendar cal = Calendar.getInstance();
+        cal.setLenient(false);
+        cal.setTime(dob);
+        try {
+            cal.getTime();
+
+        }
+        catch (Exception e) {
+            System.out.println("Invalid date");
+            Toast.makeText(EditPupilActivity.this, "You have entered an invalid date, please try again.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         //edit in pupils list
         DatabaseReference pupilRef = mDatabase.child("pupils").child(pupilUID).getRef();
         DatabaseReference editRef = pupilRef.child("name").getRef();
         editRef.setValue(newName);
+        editRef = pupilRef.child("dob").getRef();
+        editRef.setValue(dob.getTime());
 
         //edit in class list
         DatabaseReference classRef = mDatabase.child("classes").child(classUID).getRef();
@@ -77,8 +119,15 @@ public class EditPupilActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String name = (String) dataSnapshot.child("name").getValue();
+                Long dob_l = (Long) dataSnapshot.child("dob").getValue();
+                Date dob = new Date(dob_l);
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                String dob_str =  sdf.format(dob);
                 System.out.println("Name is : " + name);
                 pupilName.setText(name);
+                editName.setText(name);
+                editDOB.setText(dob_str);
+
                 //WILL WORK WHEN CLASS ID SET UP PROPERLY
                 classUID = (String) dataSnapshot.child("classID").getValue();
             }

@@ -27,6 +27,7 @@
             android:id="@+id/list"
             android:background="#aaaaaa"
             android:choiceMode="singleChoice"
+            android:clickable="true"
             android:layout_marginTop="?attr/actionBarSize"/>
 
     </android.support.design.widget.CoordinatorLayout>

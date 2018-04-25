@@ -16,8 +16,8 @@
             android:layout_height="40dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/class_name"
-            android:layout_marginTop="77dp"
+            android:layout_below="@+id/teachers"
+            android:layout_marginTop="44dp"
             android:background="@color/colorAccent"
             android:text="@string/action_reg"
             android:textColor="@color/colorPrimaryDark" />
@@ -56,17 +56,13 @@
             android:hint="@string/reg_child_dob"
             android:inputType="date" />
 
-        <EditText
-            android:id="@+id/class_uid"
+        <Spinner
+            android:id="@+id/teachers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/child_dob"
-            android:layout_alignStart="@+id/child_dob"
+            android:layout_centerHorizontal="true"
             android:layout_below="@+id/child_dob"
-            android:layout_marginTop="17dp"
-            android:ems="10"
-            android:hint="@string/reg_class_uid"
-            android:inputType="textPersonName" />
+            android:layout_marginTop="37dp" />
     </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>

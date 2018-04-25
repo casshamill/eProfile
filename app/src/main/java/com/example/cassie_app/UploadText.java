@@ -34,8 +34,7 @@ public class UploadText extends AppCompatActivity {
     String uids;
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
-    private static final String[]areas = {"Math", "Science", "Geography"};
-
+    private static final String[]areas = {"Numeracy", "WAU", "Arts", "Literacy", "PE", "PD & MU"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

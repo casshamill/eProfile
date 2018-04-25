@@ -7,17 +7,22 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.FileProvider;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -45,30 +50,24 @@ public class MainParentActivity extends AppCompatActivity {
     List<Post> posts;
     RecyclerView rv;
     RVAdapter adapter;
-    TextView gold_count;
+    RatingBar gold_count;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_parent);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_search);
         FloatingActionButton fab_pdf = (FloatingActionButton) findViewById(R.id.fab_pdf);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //do search --> maybe use menu search bar
-            }
-        });
+
         fab_pdf.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 createPDF();
             }
         });
-        gold_count = (TextView)findViewById(R.id.gold_count);
+        gold_count = (RatingBar) findViewById(R.id.ratingBar);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
@@ -76,9 +75,12 @@ public class MainParentActivity extends AppCompatActivity {
         posts = new ArrayList<>();
 
         Bundle bundle = getIntent().getExtras();
-
-        if( !bundle.getString("parent").equals("login")) {
-            loadData(bundle.getString("parent"));
+        if (bundle != null){
+            if( !bundle.getString("parent").equals("login")) {
+                loadData(bundle.getString("parent"));
+            }else {
+                findPupil();
+            }
         } else {
             findPupil();
         }
@@ -87,26 +89,27 @@ public class MainParentActivity extends AppCompatActivity {
         rv.setLayoutManager(llm);
     }
 
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main_parent, menu);
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.options_menu, menu);
+
+        MenuItem mSearch = menu.findItem(R.id.search);
+        SearchView mSearchView = (SearchView) mSearch.getActionView();
+
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 adapter.filter(query);
-                return true;
+                return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
                 adapter.filter(newText);
-                return true;
+                return false;
             }
         });
+
         return true;
     }
 
@@ -218,14 +221,14 @@ public class MainParentActivity extends AppCompatActivity {
                     String date = (String) p.child("date").getValue();
                     String area = (String) p.child("area").getValue();
                     boolean golden = (boolean) p.child("golden").getValue();
-                    if (golden) count ++;
+                    if (golden) count++;
                     System.out.println("Author:" + author + " -  Content : " + content + "Area : " + area);
-                    Post post = new Post(author, content, date , image, area, golden);
+                    Post post = new Post(author, content, date, image, area, golden);
                     System.out.println("post" + post);
                     posts.add(post);
                 }
-                gold_count.setText(String.valueOf(count));
-                RVAdapter adapter = new RVAdapter(posts);
+                gold_count.setRating(count);
+                adapter = new RVAdapter(posts);
                 rv.setAdapter(adapter);
             }
 

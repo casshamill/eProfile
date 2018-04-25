@@ -83,15 +83,9 @@ public class TeacherUploadFragment extends Fragment {
                 int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                 String imgDecodableString = cursor.getString(columnIndex);
                 System.out.println("Path to image: " + imgDecodableString);
-                Bitmap b = BitmapFactory.decodeFile(imgDecodableString);
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                b.compress(Bitmap.CompressFormat.JPEG, 10, stream);
-                byte[] byteFormat = stream.toByteArray();
-                String encodedImage = Base64.encodeToString(byteFormat, Base64.NO_WRAP);
-                System.out.println("Encoded image: " + encodedImage);
                 cursor.close();
                 Intent i = new Intent(getActivity(), PupilListActivity.class);
-                i.putExtra("parent", encodedImage);
+                i.putExtra("parent", imgDecodableString);
                 TeacherUploadFragment.this.startActivity(i);
             } else {
                 Toast.makeText(getActivity(), "You haven't picked an Image",Toast.LENGTH_LONG).show();

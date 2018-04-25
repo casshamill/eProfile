@@ -12,17 +12,26 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/class_id_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:textAlignment="center"
+                    android:textSize="14sp"
+                    tools:text="Class ID Here" />
 
                 <Button
                     android:id="@+id/button_editpupil"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
-                    android:layout_marginBottom="20dp"
+                    android:layout_marginVertical="30dp"
                     android:layout_marginLeft="40dp"
                     android:layout_marginRight="40dp"
-                    android:layout_marginTop="20dp"
                     android:background="@color/colorAccent"
                     android:text="@string/edit_pupil"
                     android:textColor="@color/colorPrimaryDark" />
@@ -32,10 +41,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
-                    android:layout_marginBottom="20dp"
                     android:layout_marginLeft="40dp"
                     android:layout_marginRight="40dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginVertical="30dp"
                     android:background="@color/colorAccent"
                     android:text="@string/add_pupil"
                     android:textColor="@color/colorPrimaryDark" />
@@ -46,37 +54,21 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
-                    android:layout_marginBottom="20dp"
                     android:layout_marginLeft="40dp"
                     android:layout_marginRight="40dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginVertical="30dp"
                     android:background="@color/colorAccent"
                     android:text="@string/delete_pupil"
                     android:textColor="@color/colorPrimaryDark" />
-
-                <Button
-                    android:id="@+id/button_deleteclass"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_marginBottom="20dp"
-                    android:layout_marginLeft="40dp"
-                    android:layout_marginRight="40dp"
-                    android:layout_marginTop="20dp"
-                    android:background="@color/colorAccent"
-                    android:text="@string/delete_class"
-                    android:textColor="@color/colorPrimaryDark" />
-
 
                 <Button
                     android:id="@+id/button_changepword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
-                    android:layout_marginBottom="20dp"
                     android:layout_marginLeft="40dp"
                     android:layout_marginRight="40dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginVertical="30dp"
                     android:background="@color/colorAccent"
                     android:text="@string/change_pword"
                     android:textColor="@color/colorPrimaryDark" />

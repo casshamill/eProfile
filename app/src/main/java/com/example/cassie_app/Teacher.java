@@ -1,7 +1,7 @@
 package com.example.cassie_app;
 
 /**
- * Created by Tiarnan on 04/03/2018.
+ * Created by Cassie on 04/03/2018.
  */
 
 public class Teacher {

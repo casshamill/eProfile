@@ -18,6 +18,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,6 +28,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -43,6 +45,7 @@ import java.util.List;
 
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.READ_CONTACTS;
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 
 /**
  * A login screen that offers login via email/password.
@@ -55,6 +58,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     private static final int REQUEST_READ_CONTACTS = 0;
     private static final int REQUEST_CAMERA = 1;
+    private static final int REQUEST_STORAGE = 2;
 
     /**
      * A dummy authentication store containing known user names and passwords.
@@ -116,32 +120,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mProgressView = findViewById(R.id.login_progress);
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
+
+        mayRequestStorage();
     }
-
-    private ValueEventListener postListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                //for (DataSnapshot messageSnapshot : dataSnapshot.getChildren()) {
-                    DataSnapshot messageSnapshot = dataSnapshot.child("pupils");
-                    //System.out.println("Tiarnan");
-                    DataSnapshot feeds = messageSnapshot.child("0").child("feed");
-                    for (DataSnapshot d : feeds.getChildren()){
-                        System.out.println("Post : " + d.child("content").getValue());
-                    }
-                    //String name = (String) messageSnapshot.child("name").getValue();
-                    //String message = (String) messageSnapshot.child("message").getValue();
-                //}
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                System.out.println("Cancelled Read from Firebase");
-                // ...
-            }
-        };
-
-
 
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {
@@ -171,6 +152,28 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     });
         } else {
             requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
+        }
+        return false;
+    }
+
+    private boolean mayRequestStorage() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return true;
+        }
+        if (checkSelfPermission(READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        }
+        if (shouldShowRequestPermissionRationale(READ_EXTERNAL_STORAGE)) {
+            Snackbar.make(mEmailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(android.R.string.ok, new OnClickListener() {
+                        @Override
+                        @TargetApi(Build.VERSION_CODES.M)
+                        public void onClick(View v) {
+                            requestPermissions(new String[]{READ_EXTERNAL_STORAGE}, REQUEST_STORAGE);
+                        }
+                    });
+        } else {
+            requestPermissions(new String[]{READ_EXTERNAL_STORAGE}, REQUEST_STORAGE);
         }
         return false;
     }
@@ -211,6 +214,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         if (requestCode == REQUEST_CAMERA) {
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 populateAutoComplete();
+            }
+        }
+        if (requestCode == REQUEST_STORAGE) {
+            if (grantResults.length == 1 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(LoginActivity.this, "You will be unable to acces local files", Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -288,25 +296,25 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         Intent i = null;
                                         if (dataSnapshot.hasChild(uid)){
-                                            System.out.println("Teaecher exists");
+                                            System.out.println("teacher exists");
                                             if ((boolean) dataSnapshot.child(uid).child("admin").getValue() == true){
                                                 System.out.println("Teacher is admin");
                                                 i = new Intent(LoginActivity.this, AdminTeacherActivity.class);
                                             }                      //check if teacher confirmed yet
                                             else if ((boolean)dataSnapshot.child(uid).child("confirmed").getValue() == false){
-                                                System.out.println("Teaecher exists unconfirmed");
+                                                System.out.println("Teacher exists unconfirmed");
                                                 i = new Intent(LoginActivity.this,WaitForConfirmedActivity.class);
                                             } else if(((String)dataSnapshot.child(uid).child("class_id").getValue()).equals("-1")){
                                                 //show add class screen
-                                                System.out.println("Teaecher exists no class");
+                                                System.out.println("Teacher exists no class");
                                                 i = new Intent(LoginActivity.this,CreateClassActivity.class);
                                             } else {
-                                                System.out.println("Tiarnan class: " + (String)dataSnapshot.child(uid).child("class_id").getValue());
-                                                System.out.println("Teaecher exists class registered");
+                                                System.out.println("Cassie class: " + (String)dataSnapshot.child(uid).child("class_id").getValue());
+                                                System.out.println("Teacher exists class registered");
                                                 i = new Intent(LoginActivity.this,MainTeacherActivity.class);
                                             }
                                         } else {
-                                            System.out.println("Teaecher not exists");
+                                            System.out.println("Teacher not exists");
                                             i = new Intent(LoginActivity.this,MainParentActivity.class);
                                             i.putExtra("parent", "login");
                                         }

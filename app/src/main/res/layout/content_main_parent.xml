@@ -20,10 +20,10 @@
         card_view:cardBackgroundColor="@color/feed_bg"
         card_view:cardCornerRadius="8dp"
         card_view:cardPreventCornerOverlap="true"
-        card_view:contentPaddingBottom="@dimen/feed_item_padding_top_bottom"
+        card_view:contentPaddingBottom="10dp"
         card_view:contentPaddingLeft="@dimen/feed_item_padding_left_right"
         card_view:contentPaddingRight="@dimen/feed_item_padding_left_right"
-        card_view:contentPaddingTop="@dimen/feed_item_padding_top_bottom"
+        card_view:contentPaddingTop="10dp"
         >
 
         <LinearLayout
@@ -100,7 +100,7 @@
                     android:paddingBottom="10dp"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:paddingTop="20dp">
+                    android:paddingTop="10dp">
 
                     <TextView
                         android:id="@+id/feed_content"

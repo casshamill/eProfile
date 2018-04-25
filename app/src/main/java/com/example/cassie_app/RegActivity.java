@@ -1,5 +1,6 @@
 package com.example.cassie_app;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -105,6 +107,7 @@ public class RegActivity extends AppCompatActivity {
                                 Intent i = new Intent(RegActivity.this, ParentRegActivity.class);
                                 i.putExtra("EMAILVALUE",email);
                                 i.putExtra("NAMEVALUE",name);
+                                i.putExtra("SCHOOLVALUE",schoolId);
                                 RegActivity.this.startActivity(i);
                             }
                             else if (radioGroupView.getCheckedRadioButtonId() == R.id.reg_teacher){
@@ -122,8 +125,9 @@ public class RegActivity extends AppCompatActivity {
                             }
                         } else {
                             // If sign in fails, display a message to the user.
-                            System.out.println("Regestration failed");
+                            System.out.println("Registration failed");
                             System.out.println("Failure Reason:" + task.getException());
+                            Toast.makeText(RegActivity.this, "Something went wrong: " + task.getException(), Toast.LENGTH_LONG).show();
                         }
 
                         // ...
@@ -150,6 +154,11 @@ public class RegActivity extends AppCompatActivity {
         return true;
     }
 
-
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        setResult(RESULT_CANCELED, intent);
+        super.onBackPressed();
+    }
 
 }

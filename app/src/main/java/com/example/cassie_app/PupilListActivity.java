@@ -72,6 +72,8 @@ public class PupilListActivity extends AppCompatActivity {
         listview = (ListView)findViewById(R.id.list);
         if (parent.equals("edit")) {
             listview.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+            fab.setVisibility(View.INVISIBLE);
+            fab.setClickable(false);
         }
 
         final DatabaseReference classid = mDatabase.child("teachers").child( mAuth.getCurrentUser().getUid()).child("class_id");
@@ -95,6 +97,8 @@ public class PupilListActivity extends AppCompatActivity {
 
     private void continue_clicked() {
 
+        sparseBooleanArray = listview.getCheckedItemPositions();
+
         boolean empty = true;
         for (int j = 0; j < sparseBooleanArray.size(); j++){
             if (sparseBooleanArray.valueAt(j) == true) {
@@ -103,8 +107,6 @@ public class PupilListActivity extends AppCompatActivity {
             }
         }
         if (empty) return;
-
-        sparseBooleanArray = listview.getCheckedItemPositions();
 
         String ValueHolder = "" ;
         String KeyHolder = "";

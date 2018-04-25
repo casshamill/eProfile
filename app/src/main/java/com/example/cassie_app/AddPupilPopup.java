@@ -45,7 +45,7 @@ public class AddPupilPopup extends AppCompatActivity {
                 String dob_str = dobView.getText().toString();
                 String[] split = dob_str.split("/");
                 if(split[split.length-1].length() < 4 ){
-                    dobView.setError("Please use the format DD/MM/YYYY");
+                    dobView.setError("Use format DD/MM/YYYY");
                     return;
                 }
                 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -84,6 +84,13 @@ public class AddPupilPopup extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        setResult(RESULT_CANCELED, intent);
+        super.onBackPressed();
     }
 
 }

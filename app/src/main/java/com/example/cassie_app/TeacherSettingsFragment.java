@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,6 +24,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import org.w3c.dom.Text;
 
 import java.util.Date;
 
@@ -38,6 +41,8 @@ public class TeacherSettingsFragment extends Fragment {
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
     private String classUID;
+    private TextView class_id_text;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
@@ -45,8 +50,9 @@ public class TeacherSettingsFragment extends Fragment {
         Button edit_pupil_btn = (Button) view.findViewById(R.id.button_editpupil);
         final Button add_pupil_btn = (Button)view.findViewById(R.id.button_addpupil);
         Button delete_pupil_btn = (Button) view.findViewById(R.id.button_deletepupil);
-        Button delete_class_btn = (Button) view.findViewById(R.id.button_deleteclass);
+        //Button delete_class_btn = (Button) view.findViewById(R.id.button_deleteclass);
         Button edit_pword_btn = (Button) view.findViewById(R.id.button_changepword);
+        class_id_text = (TextView) view.findViewById(R.id.class_id_text);
 
         add_pupil_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,7 +73,7 @@ public class TeacherSettingsFragment extends Fragment {
                 deletePupil();
             }
         });
-        delete_class_btn.setOnClickListener(new View.OnClickListener() {
+        /*delete_class_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new AlertDialog.Builder(getActivity())
@@ -80,7 +86,7 @@ public class TeacherSettingsFragment extends Fragment {
                             }})
                         .setNegativeButton(android.R.string.no, null).show();
             }
-        });
+        });*/
         edit_pword_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -91,6 +97,7 @@ public class TeacherSettingsFragment extends Fragment {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
         getClassId();
+
         return view;
 
     }
@@ -125,6 +132,7 @@ public class TeacherSettingsFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 classUID = (String) dataSnapshot.child("class_id").getValue();
+                class_id_text.setText("Class ID: " + classUID);
             }
 
             @Override
@@ -140,7 +148,7 @@ public class TeacherSettingsFragment extends Fragment {
         TeacherSettingsFragment.this.startActivity(i);
     }
 
-    private void deleteClass(){
+    /*private void deleteClass(){
         DatabaseReference classRef = mDatabase.child("classes").child(classUID);
         classRef.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -153,7 +161,7 @@ public class TeacherSettingsFragment extends Fragment {
                 }
             }
         });
-    }
+    }*/
 
     private void editPupil(){
         Intent i = new Intent(getActivity(), PupilListActivity.class);

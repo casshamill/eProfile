@@ -20,6 +20,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 
 public class AdminTeacherActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
@@ -28,6 +29,7 @@ public class AdminTeacherActivity extends AppCompatActivity {
     ArrayList<String> ListViewItems = new ArrayList<String>();
     ArrayList<String> uids = new ArrayList<String>();
     String schoolid;
+    boolean select_all = false;
 
     SparseBooleanArray sparseBooleanArray ;
 
@@ -124,7 +126,12 @@ public class AdminTeacherActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot teacher : dataSnapshot.getChildren()) {
-                    System.out.println("Tiarnan: " + teacher.getKey().toString());
+                    System.out.println("Cassie: " + teacher.getKey().toString());
+                    try {
+                        boolean conf = (boolean)teacher.getValue();
+                    } catch (ClassCastException e ){
+                        continue;
+                    }
                     if ((boolean)teacher.getValue() == false){
                         uids.add(teacher.getKey().toString());
                     }
@@ -145,7 +152,7 @@ public class AdminTeacherActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (String uid: uids){
-                    System.out.print("Tiarnan uid" + uid);
+                    System.out.print("Cassie uid" + uid);
                     ListViewItems.add(dataSnapshot.child(uid).child("name").getValue().toString());
                 }
                 createList();
@@ -160,8 +167,9 @@ public class AdminTeacherActivity extends AppCompatActivity {
     }
 
     public void selectAll(){
+        select_all = !select_all;
         for ( int i=0; i < listview.getAdapter().getCount(); i++) {
-            listview.setItemChecked(i, true);
+            listview.setItemChecked(i, select_all);
         }
     }
 
@@ -189,11 +197,14 @@ public class AdminTeacherActivity extends AppCompatActivity {
         KeyHolder = KeyHolder.replaceAll("(,)*$", "");
 
         String[] uids = KeyHolder.split(",");
+        String[] names = ValueHolder.split(",");
+        int count = 0;
         for (String uid: uids) {
             DatabaseReference ref = mDatabase.child("teachers").child(uid).child("confirmed").getRef();
             ref.setValue(true);
             DatabaseReference school = mDatabase.child("schools").child(schoolid).child(uid).getRef();
-            school.setValue(true);
+            school.setValue(names[count]);
+            count ++;
         }
         Intent i = new Intent(AdminTeacherActivity.this, AdminSuccess.class);
         AdminTeacherActivity.this.startActivity(i);

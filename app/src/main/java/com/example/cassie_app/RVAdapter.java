@@ -92,17 +92,29 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ContentViewHolder>
         holder.content.setText(posts.get(position).content);
         String background = null;
         switch (posts.get(position).area) {
-            case "Math":
+            case "Numeracy":
                 holder.area.setBackgroundResource(R.drawable.area_indicator_math);
-                holder.area.setText("Math");
+                holder.area.setText("Numeracy");
                 break;
-            case "Science":
+            case "WAU":
                 holder.area.setBackgroundResource(R.drawable.area_indicator_sci);
-                holder.area.setText("Science");
+                holder.area.setText("WAU");
                 break;
-            case "Geography":
-                holder.area.setBackgroundResource(R.drawable.area_indicator_geo);
-                holder.area.setText("Geography");
+            case "Arts":
+                holder.area.setBackgroundResource(R.drawable.area_indicator_art);
+                holder.area.setText("Arts");
+                break;
+            case "Literacy":
+                holder.area.setBackgroundResource(R.drawable.area_indicator_lit);
+                holder.area.setText("Literacy");
+                break;
+            case "PE":
+                holder.area.setBackgroundResource(R.drawable.area_indicator_pe);
+                holder.area.setText("PE");
+                break;
+            case "PD & MU":
+                holder.area.setBackgroundResource(R.drawable.area_indicator_pd);
+                holder.area.setText("PD & MU");
                 break;
         }
         if (posts.get(position).golden){
@@ -155,7 +167,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ContentViewHolder>
         } else{
             text = text.toLowerCase();
             for(Post post: postsCopy){
-                if(post.content.toLowerCase().contains(text) || post.author.toLowerCase().contains(text)){
+                if(post.content.toLowerCase().contains(text) || post.author.toLowerCase().contains(text) || post.area.toLowerCase().contains(text)){
                     posts.add(post);
                 }
             }

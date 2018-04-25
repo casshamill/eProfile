@@ -68,6 +68,8 @@
     <string name="error_date">Date Format Invalid. Use: DD/MM/YYYY</string>
     <string name="title_activity_pupil_settings">SettingsPupil</string>
     <string name="admin_home">Return to Admin Page</string>
+    <string name="search_hint">Search to filter content</string>
+    <string name="teacher_name">Teacher Surname</string>
 
     <string name="large_text">
         "Material is the metaphor.\n\n"

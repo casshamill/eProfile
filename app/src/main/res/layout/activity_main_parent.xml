@@ -18,7 +18,8 @@
         <ImageView
             android:id="@+id/pupil_avatar"
             android:layout_width="match_parent"
-            android:layout_height="64dp"
+            android:layout_height="44dp"
+            android:layout_marginTop="25dp"
             android:layout_weight="1"
             android:contentDescription="@string/child_avatar"
             app:srcCompat="@drawable/ic_face_black_24dp" />
@@ -26,36 +27,44 @@
         <TextView
             android:id="@+id/pupil_name"
             android:layout_width="match_parent"
-            android:layout_height="52dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/title_activity_main_parent"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
-            android:textSize="24sp" />
+            android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/gold_count"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="@string/title_date" />
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|enterAlways|snap"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+            <RatingBar
+                android:id="@+id/ratingBar"
+                android:numStars="6"
+                android:layout_gravity="left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:isIndicator="true"
+                android:layout_weight="1" />
+
+
+        </android.support.v7.widget.Toolbar>
+
+
 
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v7.widget.RecyclerView
-        android:layout_marginTop="60dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:id="@+id/rv" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_search"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
-        app:layout_anchor="@id/app_bar"
-        app:layout_anchorGravity="bottom|end"
-        app:srcCompat="@drawable/ic_search_black_24dp" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_pdf"
@@ -64,5 +73,6 @@
         android:layout_margin="@dimen/fab_margin"
         android:layout_gravity="bottom|end"
         app:srcCompat="@drawable/ic_picture_as_pdf_black_24dp" />
+
 
 </android.support.design.widget.CoordinatorLayout>
