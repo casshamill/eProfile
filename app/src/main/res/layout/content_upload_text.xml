@@ -20,7 +20,7 @@
         android:id="@+id/content_text"
         android:layout_width="305dp"
         android:layout_height="361dp"
-        android:text="Conteny Here"
+        android:text="Content Here"
         tools:layout_editor_absoluteX="40dp"
         tools:layout_editor_absoluteY="84dp" />
 
